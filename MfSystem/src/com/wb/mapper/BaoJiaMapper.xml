@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.mapper.BaoJiaMapper">
+    <!--画册报价增加-->
+    <insert id="insHCBaoJia" parameterType="BaoJia">
+      insert into hcbj values (default,#{hdate},#{hcName},#{hpName},#{hfmType},#{hfmKs},#{hfmPs},#{hcpSize},#{hcount},#{hnxType},#{hnxKs},#{hnxPs},#{hcyKs},#{hcyPs},#{hcyType},#{hfumo},#{hzd},#{hsType},#{hh1},#{hh2},#{hh3},#{hh4},#{hh5},#{hhv1},#{hhv2},#{hhv3},#{hhv4},#{hhv5},#{hResultMoney},#{hpResult},1,(select MAX(id) from bjjl),#{hfmMs},#{hnxMs},#{hcyMs},#{hfmResult},#{hnxResult},#{hcyResult},#{hhjgResult})
+    </insert>
+    <!--画册添加记录-->
+    <insert id="insHCBaoJiaJiLu" parameterType="BaoJiaJiLu">
+        insert into bjjl values (default,#{hdate},#{hcName},#{hpName},#{hcount},#{hResultMoney},1,1);
+    </insert>
+    <!--书刊报价增加-->
+    <insert id="insSKBaoJia" parameterType="SBaoJia">
+      insert into skbj values (default,#{s_date},#{s_cName},#{s_pName},#{s_fmType},#{s_fmKs},#{s_fmPs},#{s_cpSize},#{s_count},#{s_nxType},#{s_nxKs},#{s_nxPs},#{s_cyKs},#{s_cyPs},#{s_cyType},#{s_fumo},#{s_zd},#{s_sType},#{s_h1},#{s_h2},#{s_h3},#{s_h4},#{s_h5},#{s_hv1},#{s_hv2},#{s_hv3},#{s_hv4},#{s_hv5},#{s_ResultMoney},#{s_pResult},1,(select MAX(id) from bjjl),#{s_fmMs},#{s_nxMs},#{s_cyMs},#{s_fmResult},#{s_nxResult},#{s_cyResult},#{s_hjgResult})
+    </insert>
+    <!--书刊添加记录-->
+    <insert id="insSKBaoJiaJiLu" parameterType="BaoJiaJiLu">
+        insert into bjjl values (default,#{s_date},#{s_cName},#{s_pName},#{s_count},#{s_ResultMoney},2,1);
+    </insert>
+    <!--分页查询所有-->
+    <select id="selAll" resultType="BaoJiaJiLu" >
+        select * from bjjl  order by id desc limit #{0},#{1};
+    </select>
+    <!--查询总条数-->
+    <select id="selCount" resultType="Integer">
+        select count(*) from bjjl;
+    </select>
+    <!--分页查询未生产工单-->
+    <select id="selProduceNo" resultType="BaoJiaJiLu" >
+        select * from bjjl where pFlag=1 order by id desc limit #{0},#{1};
+    </select>
+    <!--查询未生产总条数-->
+    <select id="selProduceNoCount" resultType="Integer">
+        select count(*) from bjjl where pFlag=1;
+    </select>
+
+    <!--分页查询已生产工单-->
+    <select id="selProduceYes" resultType="BaoJiaJiLu" >
+        select * from bjjl  where pFlag=2 order by id desc limit #{0},#{1};
+    </select>
+    <!--查询已生产总条数-->
+    <select id="selProduceYesCount" resultType="Integer">
+        select count(*) from bjjl where pFlag=2;
+    </select>
+
+    <!--查询单个-->
+    <select id="selSinBao" resultType="BaoJia">
+    select * from hcbj where #{0}=hbjjl;
+    </select>
+
+    <select id="selSinSbao" resultType="SBaoJia">
+    select * from skbj where #{0}=s_bjjl;
+    </select>
+    <!--———————————客户名称———————————-->
+    <select id="selByCName" resultType="BaoJiaJiLu">
+        select * from bjjl where cName=#{2} order by id desc limit #{0},#{1};
+    </select>
+
+    <select id="selByCNameCount" resultType="Integer">
+        select count(*) from bjjl where cName=#{0};
+    </select>
+    <!--———————————印刷名称———————————-->
+    <select id="selByPName" resultType="BaoJiaJiLu">
+        select * from bjjl where pName=#{2} order by id desc limit #{0},#{1};
+    </select>
+
+    <select id="selByPNameCount" resultType="Integer">
+        select count(*) from bjjl where pName=#{0};
+    </select>
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.mapper.DunJiaMapper">
+    <!--查询吨价-->
+    <select id="selDunJia" resultType="DunJia" >
+        select * from dj;
+    </select>
+    <!--更新吨价-->
+    <update id="updateDunJ">
+        update dj set price  = #{1}  where id=#{0} ;
+    </update>
+    <!--根据类型查吨价-->
+    <select id="getDprice" resultType="int">
+        select price from dj where ptype=#{0};
+    </select>
+
+</mapper>

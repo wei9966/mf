@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.mapper.WorkMapper">
+    <!--已生产工单增加-->
+    <insert id="insWork" parameterType="Work">
+      insert into t_producework values (default,#{w_kDate},#{w_cName},#{w_pName},#{w_count},#{w_jDate},#{w_hDate},#{w_jiTai},#{w_cSize},#{w_pSize},#{w_fmPage},#{w_fmKb},#{w_fmZcount},#{w_fmFcount},#{w_fmHcount},#{w_fmYellow},#{w_fmYCount},#{w_nxPage},#{w_nxKb},#{w_nxZcount},#{w_nxFcount},#{w_nxHcount},#{w_nxYellow},#{w_nxYCount},#{w_cyPage},#{w_cyKb},#{w_cyZcount},#{w_cyFcount},#{w_cyHcount},#{w_cyYellow},#{w_cyYCount},#{w_other},#{w_hjg},#{w_fmKs},#{w_nxKs},#{w_cyKs},#{w_result},#{w_flag});
+    </insert>
+
+    <!--分页查询所有工单-->
+    <select id="selAllWork" resultType="Work" >
+        select * from t_producework  order by w_id desc limit #{0},#{1};
+    </select>
+    <!--所有工单条数-->
+    <select id="selAllWorkCount" resultType="int" >
+        select count(*) from t_producework;
+    </select>
+    <!--更新报价比较记录状态-->
+    <update id="updateProduct">
+        update bjjl set pFlag=2 where id=#{0};
+    </update>
+
+    <!--更新画册报价状态-->
+    <update id="updateHc">
+        update hcbj set hflag=2  where hbjjl=#{0};
+    </update>
+    <!--更新书刊报价状态-->
+    <update id="updateSk">
+        update skbj set s_flag=2  where s_bjjl=#{0};
+    </update>
+
+    <!--更新工单-->
+    <update id="updateWork">
+        update t_producework set w_id=#{1}
+        <if test="w_kDate != '' and w_kDate != null">
+          , w_kDate=#{w_kDate}
+        </if>
+        <if test="w_cName != '' and w_cName != null">
+            , w_cName=#{w_cName}
+        </if>
+        <if test="w_pName != '' and w_pName != null">
+            , w_pName=#{w_pName}
+        </if>
+        <if test="w_hjg != '' and w_hjg != null">
+            , w_hjg=#{w_hjg}
+        </if>
+        <if test="w_result != '' and w_result != 0">
+            , w_result=#{w_result}
+        </if>
+        <if test="w_other != '' and w_other != null">
+            , w_other=#{w_other}
+        </if>
+      where w_id=#{1};
+    </update>
+</mapper>

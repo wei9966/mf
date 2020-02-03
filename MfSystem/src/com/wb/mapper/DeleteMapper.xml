@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.mapper.DeleteMapper">
+    <!--删除画册报价的画册-->
+    <delete id="deleteBaoJiaHc">
+      delete from hcbj where id=#{0};
+    </delete>
+    <!--删除画册报价的报价记录-->
+    <delete id="deleteBaoJiaHcBJ">
+     delete from bjjl where id=#{0};
+    </delete>
+
+    <!--删除书刊报价的书刊-->
+    <delete id="deleteBaoJiaSk">
+      delete from skbj where id=#{0};
+    </delete>
+    <!--删除书刊报价的报价记录-->
+    <delete id="deleteBaoJiaSkBJ">
+     delete from bjjl where id=#{0};
+    </delete>
+
+</mapper>

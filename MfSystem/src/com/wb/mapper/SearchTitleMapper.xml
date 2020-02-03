@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.mapper.SearchTitleMapper">
+    <select id="getTitleCName" resultType="String">
+        select cName from bjjl group by cName;
+    </select>
+    <select id="getTitlePName" resultType="String">
+        select pName from bjjl group by pName;
+    </select>
+</mapper>

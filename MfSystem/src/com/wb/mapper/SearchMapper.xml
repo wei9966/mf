@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.mapper.SearchMapper">
+        <select id="searchJiTai" resultType="String">
+          select w_jiTai from t_producework where w_jiTai like CONCAT('%',#{0},'%') group by w_jiTai;
+        </select>
+         <select id="searchCName" resultType="String">
+          select cName from bjjl where cName like CONCAT('%',#{0},'%') group by cName;
+        </select>
+</mapper>
