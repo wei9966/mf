@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<style>
+		ul{
+			margin: 0 0 0 25px;
+			list-style-type: none;
+			padding: 0;
+			text-align: center;
+		}
+
+		.duiZhang>ul{
+			float: left;
+			width: 200px;
+			height: 200px;
+			border: 1px solid red;
+		}
+		ul li{
+			margin-left: 50px;
+			margin-top: 50px;
+		}
+		ul li:nth-of-type(1){
+			font-size: 30px;
+			color: black;
+		}
+		ul li:nth-of-type(2){
+			font-size: 22px;
+			color: red;
+		}
+	</style>
+	<script src="/static/js/jquery-1.12.4.js"></script>
+	<script src="/static/js/duiZhangJs.js"></script>
+	<script>
+        $(function () {
+            $(".duiZhang>ul").click(function (e) {
+                var id=$(e.target).attr("id");
+                var cName="";
+                if (typeof(id)=="undefined" ||id==""){
+					cName=$(e.target).find("li:first").text();
+				}else if (id=='l2'){
+					cName=$(e.target).parent("ul").find("li:first").text();
+				}else {
+					cName=$(e.target).text();
+				}
+                location.href="/CheckAccount/specificAccount?cName="+cName;
+            });
+        });
+	</script>
+	<title>对账</title>
+</head>
+<body>
+<div class="duiZhang">
+		<ul th:each="dz:${list}">
+			<li id="l1" th:text="${dz.cName}">
+			</li>
+			<li id="l2" th:text="${dz.money}">
+			</li>
+		</ul>
+</div>
+</body>
+</html>

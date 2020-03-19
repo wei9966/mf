@@ -1,0 +1,36 @@
+#jCName{
+    margin-left:6px ;
+    width: 148px;
+    border: 1px black solid;
+    background: white;
+}
+#jCName>ul li{
+    margin: 0px auto;
+    padding: 0px auto;
+    list-style-type: none;
+    text-align: left;
+}
+#jCName>ul{
+    padding: 0;
+    margin: 0;
+}
+/*——————————————————————————————————————————————————————————————-*/
+#jPName{
+    margin-left:6px ;
+    width: 148px;
+    border: 1px black solid;
+    background: white;
+}
+#jPName>ul li{
+    margin: 0px auto;
+    padding: 0px auto;
+    list-style-type: none;
+    text-align: left;
+}
+#jPName>ul{
+    padding: 0;
+    margin: 0;
+}
+.op{
+    background: #5ab4e2;
+}

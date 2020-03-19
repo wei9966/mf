@@ -1,0 +1,11 @@
+1.关于Thymeleaf导入css或js文件
+       路径还是/static/css/**
+       需要编写一个配置类 MVCConfiguration继承WebMvcConfigurationSupport
+       1.1 配置默认访问页面
+             registry.addViewController("/").setViewName("index");
+                    registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
+       1.2 配置访问静态资源
+             registry.addResourceHandler("/static/**").addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX+"/static/");
+2.th页面关于th:attr="data-****" 中的****字母会自动转成小写   大写也会自动转成小写
+3.JS中获取实体类对象之后，先用JSON.stringify()转换成字符串,然后用replace(/=/g,':')的方法替换json形式
+4.Expected BEGIN_OBJECT but was STRING at line 1 column 1 path $ gson辅助包用的时候 key必须用引号引起来

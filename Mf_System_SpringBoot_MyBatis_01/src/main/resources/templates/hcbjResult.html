@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<script src="/static/js/jquery-1.12.4.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/static/css/bootstrap.css">
+	<link rel="stylesheet" href="/static/css/style.css">
+	<title>画册报价结果</title>
+</head>
+<body>
+<h1 align="center">画册报价</h1><br><br>
+<div class="form-group">
+	<table class="table-hover t1" align="center" border="1" cellpadding="0" cellspacing="0" >
+		<tr >
+			<th>日期</th>
+			<th>客户名称</th>
+			<th>文件名称</th>
+			<th>成品尺寸</th>
+			<th>成品数量</th>
+			<th>封面克数</th>
+			<th>封面纸型</th>
+			<th>封面P数</th>
+			<th>封面墨色</th>
+		</tr>
+		<tr >
+			<td th:text="${baoJia.hdate}"></td>
+			<td th:text="${baoJia.hcName}"></td>
+			<td th:text="${baoJia.hpName}"></td>
+			<td th:text="${baoJia.hcpSize}"></td>
+			<td th:text="${baoJia.hcount}"></td>
+			<td th:text="${baoJia.hfmKs}"></td>
+			<td th:text="${baoJia.hfmType}"></td>
+			<td th:text="${baoJia.hfmPs}"></td>
+			<td th:text="${baoJia.hfmMs}"></td>
+		</tr>
+		<tr>
+			<td colspan="5" rowspan="4"style="border-left: 0px white;"></td>
+			<th >内芯克数</th>
+			<th>内芯纸型</th>
+			<th >内芯P数</th>
+			<th>内芯墨色</th>
+		</tr>
+		<tr>
+			<td th:text="${baoJia.hnxKs}"></td>
+			<td th:text="${baoJia.hnxType}"></td>
+			<td th:text="${baoJia.hnxPs}"></td>
+			<td th:text="${baoJia.hnxMs}"></td>
+		</tr>
+		<tr>
+			<th>插页克数</th>
+			<th>插页纸型</th>
+			<th>插页P数</th>
+			<th>插页墨色</th>
+		</tr>
+
+		<tr>
+			<td th:text="${baoJia.hcyKs}"></td>
+			<td th:text="${baoJia.hcyType}"></td>
+			<td th:text="${baoJia.hcyPs}"></td>
+			<td th:text="${baoJia.hcyMs}"></td>
+		</tr>
+	</table>
+
+	<table class="  table-hover t1" border="1" align="center" style="margin-top: 25px;" cellspacing="1" cellpadding="1" >
+		<tr>
+			<th>复膜</th>
+			<th>装订方式</th>
+			<th>配送方式</th>
+			<th>特殊工艺</th>
+			<td th:text="${baoJia.hh1}"></td>
+			<td th:text="${baoJia.hh2}"></td>
+			<td th:text="${baoJia.hh3}"></td>
+			<td th:text="${baoJia.hh4}"></td>
+			<td th:text="${baoJia.hh5}"></td>
+		</tr>
+		<tr>
+			<td th:text="${baoJia.hfumo}"></td>
+			<td th:text="${baoJia.hzd}"></td>
+			<td th:text="${baoJia.hsType}"></td>
+			<th>
+				金额
+			</th>
+			<td th:text="${baoJia.hhv1}"></td>
+			<td th:text="${baoJia.hhv2}"></td>
+			<td th:text="${baoJia.hhv3}"></td>
+			<td th:text="${baoJia.hhv4}"></td>
+			<td th:text="${baoJia.hhv5}"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<th>配送金额</th>
+			<td th:text="${baoJia.hpResult}"></td>
+			<td colspan="6"></td>
+		</tr>
+	</table>
+	<script>
+        $(document).ready(function () {
+            var w=	$(".t1").width();
+            var h=$(".t1").height();
+            $("#hresult").width(w);
+            $("#hresult").height(h);
+            $("#hresult div").width(w);
+        });
+	</script>
+	<div id="hresult">
+		<div style="position: absolute;">
+			<h2>封面金额:<span id="hfmResult" th:text="${baoJia.hfmResult}"></span></h2>
+			<h2>内芯金额:<span id="hnxResult" th:text="${baoJia.hnxResult}"></span></h2>
+			<h2>插页金额:<span id="hcyResult" th:text="${baoJia.hcyResult}"></span></h2>
+			<h2>后期金额:<span id="hhjgResult" th:text="${baoJia.hhjgResult}"></span></h2>
+			<h2>配送金额:<span id="hpsResult" th:text="${baoJia.hpResult}"></span></h2>
+			<h1>总金额:<span id="hresultMoney" th:text="${baoJia.hResultMoney}"></span></h1>
+			<button hidden id="hproduce" class="btn-danger" style="width:100px;height: 50px;position: absolute;right: 0px;bottom: 0px; ">生产</button>
+			<button hidden id="hdelete" class="btn-danger" style="width:100px;height: 50px;position: absolute;right: 101px;bottom: 0px; ">删除</button>
+			<button id="hmodify" class="btn-danger" style="width:100px;height: 50px;position: absolute;right: 202px;bottom: 0px; ">修改</button>
+			<div hidden class="flag1" th:attr="data-flag=${baoJia.hflag}"></div>
+			<div hidden class="id" th:attr="data-id=${baoJia.id}"></div>
+			<div hidden class="hid" th:attr="data-hid=${baoJia.hbjjl}"></div>
+			<div hidden class="hpName" th:attr="data-hpName=${baoJia.hpName}"></div>
+			<div hidden class="baoJia" th:attr="data-baoJia=${jsonBaoJia}"></div>
+			<div class="pflag" hidden th:attr="data-flag1=${flag}"></div>
+
+		</div>
+		<script>
+            $(function () {
+                var flag=$(".flag1").data("flag");
+                $(document).ready(function () {
+                    if (flag==1){
+                        $("#hproduce").show();
+                        $("#hdelete").show();
+                    }
+                });
+                $("#hproduce").click(function () {
+                    var pName=$(".hpName").data("hpname");
+                    var flag1=$(".pflag").data("flag1");
+                    var baoJia=$(".baoJia").data("baojia");
+                   // 将对象转换成字符串
+                   var baoJia1=JSON.stringify(baoJia);
+					//将字符串转换成json对象
+                    if (pName==""){
+                        alert("印刷名为空，请修改后进行生产");
+                    }else{
+                        var url="/work/htmlPage?&baoJia="+baoJia1+"&flag="+flag1;
+                        location.href=encodeURI(url);
+                    }
+                });
+                $("#hdelete").click(function () {
+                    /**
+                     * id 是对应实体类的id
+                     * hid 是对应的报价记录的id
+                     * @type {string}
+                     */
+                    var id=$(".id").data("id");
+                    var hid=$(".hid").data("hid");
+                    $.ajax({
+                        type:"post",
+                        url:"/delete/hc",
+                        dataType:"text",
+                        data:{"id":id,"hid":hid},
+                        success:function (msg) {
+                            alert(msg);
+                            location.href="/baoJiaSel/quote?type=1&flag=3";
+                        }
+                    });
+                });
+            });
+		</script>
+
+	</div>
+</div>
+</body>
+</html>

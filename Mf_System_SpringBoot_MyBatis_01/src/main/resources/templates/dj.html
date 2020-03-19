@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="/static/js/jquery-1.12.4.js"></script>
+	<style>
+		.dj_tb1 tr th,td{
+			text-align: center;
+			width: 300px;
+			height: 60px;
+		}
+	</style>
+	<script>
+        $(function () {
+            $("button").click(function (e) {
+                var id=$(e.target).data("id");
+                var b=  window.prompt("请输入你要修改的吨价","");
+                var a=parseInt(b);
+                if (b>0){
+                    $.ajax({
+						type:"post",
+	                    url:"/ton/updateTonPrice",
+	                    data:{"id":id,"price":a},
+	                    dataType:"text",
+	                    success:function (msg) {
+		                    alert(msg);
+		                    location.href="/ton/showTonPrice";
+                        }
+                    });
+                }else {
+                    alert("请输入正确的吨价");
+                }
+            });
+        });
+	</script>
+</head>
+<body>
+<table class="dj_tb1" border="1" align="center" cellpadding="0" cellspacing="0">
+	<tr>
+		<th>纸型</th>
+		<th>吨价</th>
+		<th>操作</th>
+	</tr>
+		<tr th:each="d:${dunJia}">
+			<td th:text="${d.ptype}"></td>
+			<td th:text="${d.price}"></td>
+			<td>
+				<button th:attr="data-id=d+(${d.id})">修改吨价</button>
+			</td>
+		</tr>
+</table>
+</body>
+</html>

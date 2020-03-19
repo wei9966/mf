@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<style>
+		#father{
+			text-align: center;
+		}
+		.t1 tr th,td{
+			font-size: 22px;
+			width: 120px;
+			height: 25px;
+		}
+	</style>
+	<title>个人对账页面</title>
+</head>
+<body>
+<div id="father" >
+	<h1 th:text="${cName}"></h1>
+	<table border="1" align="center" class="t1" cellspacing="0" cellpadding="5">
+		<tr>
+			<th>编号</th>
+			<th>日期</th>
+			<th>客户名称</th>
+			<th>产品名称</th>
+			<th>封面纸张</th>
+			<th>内芯纸张</th>
+			<th>成品数量</th>
+			<th>成品尺寸</th>
+			<th>印刷颜色</th>
+			<th>加工要求</th>
+			<th>总价</th>
+			<th>备注</th>
+		</tr>
+
+			<tr th:each="w:${work.list}">
+				<td th:text="${w.w_id}"></td>
+				<td th:text="${w.w_kDate}"></td>
+				<td th:text="${w.w_cName}"></td>
+				<td th:text="${w.w_pName}"></td>
+				<td th:text="${w.w_fmKs}+(${w.w_fmPage})"></td>
+				<td th:text="${w.w_nxKs}+(${w.w_nxPage})"></td>
+				<td th:text="${w.w_count}"></td>
+				<td th:text="${w.w_pSize}"></td>
+				<td th:text="${w.w_fmYellow}"></td>
+				<td th:text="${w.w_hjg}"></td>
+				<td th:text="${w.w_result}"></td>
+				<td th:text="${w.w_other}"></td>
+			</tr>
+	</table>
+</div>
+</body>
+</html>

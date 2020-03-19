@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="/static/js/jquery-1.12.4.js"></script>
+	<script src="/static/js/workJs.js"></script>
+	<style>
+		.t1 tr th,td{
+			font-size: 22px;
+			width: 100px;
+			text-align: center;
+		}
+		.t1 #w_hDate{
+			width: 300px;
+			height: 50px;
+		}
+		.t1 #w_jiTai{
+			width: 200px;
+			height: 30px;
+		}
+		.t1 #w_other{
+			width: 800px;
+			height: 50px;
+		}
+
+		#w_jiTai{
+			width: 200px;
+		}
+		#j>ul{
+			margin: 0;
+			padding-left: 0;
+		}
+		#j>ul li{
+			margin: 0px auto;
+			padding: 0px auto;
+			list-style-type: none;
+			text-align: left;
+		}
+		#j{
+			margin-left:6px ;
+			width: 198px;
+			border: 1px black solid;
+			background: white;
+		}
+		.op{
+			background: #5ab4e2;
+		}
+	</style>
+	<script>
+        $(function () {
+            //提交工单事件
+            $("#product").click(function () {
+                var jiTai=$("#w_jiTai").val();
+                var hDate=$("#w_hDate").val();
+                var other=$("#w_other").val();
+                if (jiTai==""){
+                    alert("印刷机台未选择");
+                    return false;
+                }
+                if (hDate==""){
+                    alert("交货日期未填写");
+                    return false;
+                }
+                var w=$(".jsonWork").data("work");
+                var flag=$(".flag").data("flag");
+                var flag1=$(".flag1").data("flag1");
+                var ww=JSON.stringify(w);
+                var url="/work/insertWork?w_hDate="+hDate+"&w_jiTai="+jiTai+"&w_other="+other+"&work="+ww+"&flag="+flag+"&flag1="+flag1;
+                location.href=encodeURI(url);
+            });
+        });
+	</script>
+</head>
+<body>
+<div id="father">
+	<h1 align="center">明发印刷厂生产工单</h1>
+	<span hidden class="jsonWork" th:attr="data-work=${jsonWork}"></span>
+	<span hidden class="flag" th:attr="data-flag=${flag}"></span>
+	<span hidden class="flag1" th:attr="data-flag1=${flag1}"></span>
+	<table border="1" class="t1" cellpadding="5" cellspacing="0" align="center" style="position:relative;">
+		<tr>
+			<th>开单日期</th>
+			<td colspan="4" th:text="${work.w_kDate}"></td>
+			<th>客户名称</th>
+			<td colspan="4" th:text="${work.w_cName}"></td>
+		</tr>
+		<tr>
+			<th rowspan="2">常规信息</th>
+			<th>印刷名称</th>
+			<td colspan="3" th:text="${work.w_pName}"></td>
+			<th>成品数量</th>
+			<td colspan="3" th:text="${work.w_count}"></td>
+		</tr>
+		<tr>
+			<th>
+				接单日期
+			</th>
+			<td colspan="3" th:text="${work.w_jDate}"></td>
+			<th>交货日期</th>
+			<td colspan="3"><input type="date" id="w_hDate"></td>
+		</tr>
+		<tr>
+			<th rowspan="5">印刷工艺</th>
+			<th>印刷机台</th>
+			<td colspan="2"><input type="text" id="w_jiTai">
+				<div id="j" style="position: absolute;" hidden>
+					<ul id="j1"></ul>
+				</div>
+			</td>
+			<th>产品尺寸</th>
+			<td colspan="2" th:text="${work.w_cSize}"></td>
+			<th>拼板尺寸</th>
+			<td th:text="${work.w_pSize}"></td>
+		</tr>
+		<tr>
+			<th>印刷信息</th>
+			<th>纸张</th>
+			<th>开别</th>
+			<th>正数</th>
+			<th>放数</th>
+			<th>合全开数</th>
+			<th>印刷墨色</th>
+			<th>印版数量</th>
+		</tr>
+		<tr>
+			<th>封面</th>
+			<td th:text="${work.w_fmPage}"></td>
+			<td th:text="${work.w_fmKb}"></td>
+			<td th:text="${work.w_fmZcount}"></td>
+			<td th:text="${work.w_fmFcount}"></td>
+			<td th:text="${work.w_fmHcount}"></td>
+			<td th:text="${work.w_fmYellow}"></td>
+			<td></td>
+		</tr>
+		<tr>
+			<th>内页</th>
+			<td th:text="${work.w_nxPage}"></td>
+			<td th:text="${work.w_nxKb}"></td>
+			<td th:text="${work.w_nxZcount}"></td>
+			<td th:text="${work.w_nxFcount}"></td>
+			<td th:text="${work.w_nxHcount}"></td>
+			<td th:text="${work.w_nxYellow}"></td>
+			<td></td>
+		</tr>
+		<tr>
+			<th>插页</th>
+			<td th:text="${work.w_cyPage}"></td>
+			<td th:text="${work.w_cyKb}"></td>
+			<td th:text="${work.w_cyZcount}"></td>
+			<td th:text="${work.w_cyFcount}"></td>
+			<td th:text="${work.w_cyHcount}"></td>
+			<td th:text="${work.w_cyYellow}"></td>
+			<td></td>
+		</tr>
+		<tr>
+			<th>备注</th>
+			<td colspan="8"><input type="text" id="w_other"></td>
+		</tr>
+		<tr>
+			<th>后加工</th>
+			<td colspan="8" th:text="${work.w_hjg}"></td>
+		</tr>
+		<tr>
+			<td colspan="9">
+				<button id="product" style="width: 100px;height: 35px;">生产</button>
+			</td>
+		</tr>
+	</table>
+
+
+</div>
+
+
+</body>
+</html>
