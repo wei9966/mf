@@ -1,0 +1,52 @@
+.t1 tr td{
+    width: 160px;
+    text-align: center;
+    font-size: 18px;
+}
+ul li{
+    list-style-type: none;
+}
+ul{
+    margin: 0;
+    padding: 0;
+}
+.t1 tr th{
+    width: 160px;
+    text-align: center;
+    font-size: 18px;
+}
+.t1 tr{
+    line-height: 40px;
+}
+.t1 input{
+    width: 150px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0);
+}
+.t1 select{
+    width: 150px;
+    text-align: center;
+}
+#hresult{
+    margin: 0px auto;
+}
+#hresultMoney{
+    color: red;
+    font-size: 30px;
+}
+#j>ul{
+    margin: 0;
+    padding-left: 0;
+}
+#j>ul li{
+    margin: 0px auto;
+    padding: 0px auto;
+    list-style-type: none;
+    text-align: left;
+}
+#j{
+    margin-left:6px ;
+    width: 145px;
+    border: 1px black solid;
+    background: white;
+}
