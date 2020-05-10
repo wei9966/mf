@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mf_offer_system.springboot_02.dao.MfBingdingDao">
+
+    <resultMap type="mf_offer_system.springboot_02.entity.MfBingding" id="MfBingdingMap">
+        <result property="bindingId" column="binding_id" jdbcType="INTEGER"/>
+        <result property="bindingType" column="binding_type" jdbcType="VARCHAR"/>
+        <result property="bindingPrice" column="binding_price" jdbcType="NUMERIC"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MfBingdingMap">
+        select
+          binding_id, binding_type, binding_price
+        from mf_offer.mf_bingding
+        where binding_id = #{bindingId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MfBingdingMap">
+        select
+          binding_id, binding_type, binding_price
+        from mf_offer.mf_bingding
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MfBingdingMap">
+        select
+          binding_id, binding_type, binding_price
+        from mf_offer.mf_bingding
+        <where>
+            <if test="bindingId != null">
+                and binding_id = #{bindingId}
+            </if>
+            <if test="bindingType != null and bindingType != ''">
+                and binding_type = #{bindingType}
+            </if>
+            <if test="bindingPrice != null">
+                and binding_price = #{bindingPrice}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="bindingId" useGeneratedKeys="true">
+        insert into mf_offer.mf_bingding(binding_type, binding_price)
+        values (#{bindingType}, #{bindingPrice})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mf_offer.mf_bingding
+        <set>
+            <if test="bindingType != null and bindingType != ''">
+                binding_type = #{bindingType},
+            </if>
+            <if test="bindingPrice != null">
+                binding_price = #{bindingPrice},
+            </if>
+        </set>
+        where binding_id = #{bindingId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mf_offer.mf_bingding where binding_id = #{bindingId}
+    </delete>
+
+</mapper>

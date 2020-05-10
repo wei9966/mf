@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mf_offer_system.springboot_02.dao.MfOfferDao">
+
+    <resultMap type="mf_offer_system.springboot_02.entity.MfOffer" id="MfOfferMap">
+        <result property="offerId" column="offer_id" jdbcType="INTEGER"/>
+        <result property="typeId" column="type_id" jdbcType="INTEGER"/>
+        <result property="offerProduceId" column="offer_produce_id" jdbcType="INTEGER"/>
+        <result property="offerTime" column="offer_time" jdbcType="TIMESTAMP"/>
+        <result property="offerCustomerName" column="offer_customer_name" jdbcType="VARCHAR"/>
+        <result property="offerProductName" column="offer_product_name" jdbcType="VARCHAR"/>
+        <result property="sizeId" column="size_id" jdbcType="INTEGER"/>
+        <result property="offerNumber" column="offer_number" jdbcType="INTEGER"/>
+        <result property="offerCoverGrammage" column="offer_cover_grammage" jdbcType="INTEGER"/>
+        <result property="paperIdCover" column="paper_id_cover" jdbcType="INTEGER"/>
+        <result property="offerCoverP" column="offer_cover_p" jdbcType="INTEGER"/>
+        <result property="colorIdCover" column="color_id_cover" jdbcType="INTEGER"/>
+        <result property="offerCoverPrive" column="offer_cover_prive" jdbcType="OTHER"/>
+        <result property="offerCoreGrammage" column="offer_core_grammage" jdbcType="INTEGER"/>
+        <result property="paperIdCore" column="paper_id_core" jdbcType="INTEGER"/>
+        <result property="offerCoreP" column="offer_core_p" jdbcType="INTEGER"/>
+        <result property="colorIdCore" column="color_id_core" jdbcType="INTEGER"/>
+        <result property="offerCorePrice" column="offer_core_price" jdbcType="OTHER"/>
+        <result property="offerInsetGrammage" column="offer_inset_grammage" jdbcType="INTEGER"/>
+        <result property="paperIdInset" column="paper_id_inset" jdbcType="INTEGER"/>
+        <result property="offerInsetP" column="offer_inset_p" jdbcType="INTEGER"/>
+        <result property="colorIdInset" column="color_id_inset" jdbcType="INTEGER"/>
+        <result property="offerInsetPrice" column="offer_inset_price" jdbcType="OTHER"/>
+        <result property="offerAmounPrice" column="offer_amoun_price" jdbcType="OTHER"/>
+        <result property="amounId" column="amoun_id" jdbcType="INTEGER"/>
+        <result property="offerBindingPrice" column="offer_binding_price" jdbcType="OTHER"/>
+        <result property="bindingId" column="binding_id" jdbcType="INTEGER"/>
+        <result property="offerDeliveryPrice" column="offer_delivery_price" jdbcType="OTHER"/>
+        <result property="offerProcess1Price" column="offer_process_1_price" jdbcType="OTHER"/>
+        <result property="offerProcess2Price" column="offer_process_2_price" jdbcType="OTHER"/>
+        <result property="offerProcess3Price" column="offer_process_3_price" jdbcType="OTHER"/>
+        <result property="offerProcess4Price" column="offer_process_4_price" jdbcType="OTHER"/>
+        <result property="offerProcess5Price" column="offer_process_5_price" jdbcType="OTHER"/>
+        <result property="offerProcess1Name" column="offer_process_1_name" jdbcType="VARCHAR"/>
+        <result property="offerProcess2Name" column="offer_process_2_name" jdbcType="VARCHAR"/>
+        <result property="offerProcess3Name" column="offer_process_3_name" jdbcType="VARCHAR"/>
+        <result property="offerProcess4Name" column="offer_process_4_name" jdbcType="VARCHAR"/>
+        <result property="offerProcess5Name" column="offer_process_5_name" jdbcType="VARCHAR"/>
+        <result property="offerMachiningPrice" column="offer_machining_price" jdbcType="OTHER"/>
+        <result property="offerTotalPrice" column="offer_total_price" jdbcType="OTHER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MfOfferMap">
+        select
+          offer_id, type_id, offer_produce_id, offer_time, offer_customer_name, offer_product_name, size_id, offer_number, offer_cover_grammage, paper_id_cover, offer_cover_p, color_id_cover, offer_cover_prive, offer_core_grammage, paper_id_core, offer_core_p, color_id_core, offer_core_price, offer_inset_grammage, paper_id_inset, offer_inset_p, color_id_inset, offer_inset_price, offer_amoun_price, amoun_id, offer_binding_price, binding_id, offer_delivery_price, offer_process_1_price, offer_process_2_price, offer_process_3_price, offer_process_4_price, offer_process_5_price, offer_process_1_name, offer_process_2_name, offer_process_3_name, offer_process_4_name, offer_process_5_name, offer_machining_price, offer_total_price
+        from mf_offer.mf_offer
+        where offer_id = #{offerId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MfOfferMap">
+        select
+          offer_id, type_id, offer_produce_id, offer_time, offer_customer_name, offer_product_name, size_id, offer_number, offer_cover_grammage, paper_id_cover, offer_cover_p, color_id_cover, offer_cover_prive, offer_core_grammage, paper_id_core, offer_core_p, color_id_core, offer_core_price, offer_inset_grammage, paper_id_inset, offer_inset_p, color_id_inset, offer_inset_price, offer_amoun_price, amoun_id, offer_binding_price, binding_id, offer_delivery_price, offer_process_1_price, offer_process_2_price, offer_process_3_price, offer_process_4_price, offer_process_5_price, offer_process_1_name, offer_process_2_name, offer_process_3_name, offer_process_4_name, offer_process_5_name, offer_machining_price, offer_total_price
+        from mf_offer.mf_offer
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MfOfferMap">
+        select
+          offer_id, type_id, offer_produce_id, offer_time, offer_customer_name, offer_product_name, size_id, offer_number, offer_cover_grammage, paper_id_cover, offer_cover_p, color_id_cover, offer_cover_prive, offer_core_grammage, paper_id_core, offer_core_p, color_id_core, offer_core_price, offer_inset_grammage, paper_id_inset, offer_inset_p, color_id_inset, offer_inset_price, offer_amoun_price, amoun_id, offer_binding_price, binding_id, offer_delivery_price, offer_process_1_price, offer_process_2_price, offer_process_3_price, offer_process_4_price, offer_process_5_price, offer_process_1_name, offer_process_2_name, offer_process_3_name, offer_process_4_name, offer_process_5_name, offer_machining_price, offer_total_price
+        from mf_offer.mf_offer
+        <where>
+            <if test="offerId != null">
+                and offer_id = #{offerId}
+            </if>
+            <if test="typeId != null">
+                and type_id = #{typeId}
+            </if>
+            <if test="offerProduceId != null">
+                and offer_produce_id = #{offerProduceId}
+            </if>
+            <if test="offerTime != null">
+                and offer_time = #{offerTime}
+            </if>
+            <if test="offerCustomerName != null and offerCustomerName != ''">
+                and offer_customer_name = #{offerCustomerName}
+            </if>
+            <if test="offerProductName != null and offerProductName != ''">
+                and offer_product_name = #{offerProductName}
+            </if>
+            <if test="sizeId != null">
+                and size_id = #{sizeId}
+            </if>
+            <if test="offerNumber != null">
+                and offer_number = #{offerNumber}
+            </if>
+            <if test="offerCoverGrammage != null">
+                and offer_cover_grammage = #{offerCoverGrammage}
+            </if>
+            <if test="paperIdCover != null">
+                and paper_id_cover = #{paperIdCover}
+            </if>
+            <if test="offerCoverP != null">
+                and offer_cover_p = #{offerCoverP}
+            </if>
+            <if test="colorIdCover != null">
+                and color_id_cover = #{colorIdCover}
+            </if>
+            <if test="offerCoverPrive != null">
+                and offer_cover_prive = #{offerCoverPrive}
+            </if>
+            <if test="offerCoreGrammage != null">
+                and offer_core_grammage = #{offerCoreGrammage}
+            </if>
+            <if test="paperIdCore != null">
+                and paper_id_core = #{paperIdCore}
+            </if>
+            <if test="offerCoreP != null">
+                and offer_core_p = #{offerCoreP}
+            </if>
+            <if test="colorIdCore != null">
+                and color_id_core = #{colorIdCore}
+            </if>
+            <if test="offerCorePrice != null">
+                and offer_core_price = #{offerCorePrice}
+            </if>
+            <if test="offerInsetGrammage != null">
+                and offer_inset_grammage = #{offerInsetGrammage}
+            </if>
+            <if test="paperIdInset != null">
+                and paper_id_inset = #{paperIdInset}
+            </if>
+            <if test="offerInsetP != null">
+                and offer_inset_p = #{offerInsetP}
+            </if>
+            <if test="colorIdInset != null">
+                and color_id_inset = #{colorIdInset}
+            </if>
+            <if test="offerInsetPrice != null">
+                and offer_inset_price = #{offerInsetPrice}
+            </if>
+            <if test="offerAmounPrice != null">
+                and offer_amoun_price = #{offerAmounPrice}
+            </if>
+            <if test="amounId != null">
+                and amoun_id = #{amounId}
+            </if>
+            <if test="offerBindingPrice != null">
+                and offer_binding_price = #{offerBindingPrice}
+            </if>
+            <if test="bindingId != null">
+                and binding_id = #{bindingId}
+            </if>
+            <if test="offerDeliveryPrice != null">
+                and offer_delivery_price = #{offerDeliveryPrice}
+            </if>
+            <if test="offerProcess1Price != null">
+                and offer_process_1_price = #{offerProcess1Price}
+            </if>
+            <if test="offerProcess2Price != null">
+                and offer_process_2_price = #{offerProcess2Price}
+            </if>
+            <if test="offerProcess3Price != null">
+                and offer_process_3_price = #{offerProcess3Price}
+            </if>
+            <if test="offerProcess4Price != null">
+                and offer_process_4_price = #{offerProcess4Price}
+            </if>
+            <if test="offerProcess5Price != null">
+                and offer_process_5_price = #{offerProcess5Price}
+            </if>
+            <if test="offerProcess1Name != null and offerProcess1Name != ''">
+                and offer_process_1_name = #{offerProcess1Name}
+            </if>
+            <if test="offerProcess2Name != null and offerProcess2Name != ''">
+                and offer_process_2_name = #{offerProcess2Name}
+            </if>
+            <if test="offerProcess3Name != null and offerProcess3Name != ''">
+                and offer_process_3_name = #{offerProcess3Name}
+            </if>
+            <if test="offerProcess4Name != null and offerProcess4Name != ''">
+                and offer_process_4_name = #{offerProcess4Name}
+            </if>
+            <if test="offerProcess5Name != null and offerProcess5Name != ''">
+                and offer_process_5_name = #{offerProcess5Name}
+            </if>
+            <if test="offerMachiningPrice != null">
+                and offer_machining_price = #{offerMachiningPrice}
+            </if>
+            <if test="offerTotalPrice != null">
+                and offer_total_price = #{offerTotalPrice}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="offerId" useGeneratedKeys="true">
+        insert into mf_offer.mf_offer(type_id, offer_produce_id, offer_time, offer_customer_name, offer_product_name, size_id, offer_number, offer_cover_grammage, paper_id_cover, offer_cover_p, color_id_cover, offer_cover_prive, offer_core_grammage, paper_id_core, offer_core_p, color_id_core, offer_core_price, offer_inset_grammage, paper_id_inset, offer_inset_p, color_id_inset, offer_inset_price, offer_amoun_price, amoun_id, offer_binding_price, binding_id, offer_delivery_price, offer_process_1_price, offer_process_2_price, offer_process_3_price, offer_process_4_price, offer_process_5_price, offer_process_1_name, offer_process_2_name, offer_process_3_name, offer_process_4_name, offer_process_5_name, offer_machining_price, offer_total_price)
+        values (#{typeId}, default, #{offerTime}, #{offerCustomerName}, #{offerProductName}, #{sizeId}, #{offerNumber}, #{offerCoverGrammage}, #{paperIdCover}, #{offerCoverP}, #{colorIdCover}, #{offerCoverPrive}, #{offerCoreGrammage}, #{paperIdCore}, #{offerCoreP}, #{colorIdCore}, #{offerCorePrice}, #{offerInsetGrammage}, #{paperIdInset}, #{offerInsetP}, #{colorIdInset}, #{offerInsetPrice}, #{offerAmounPrice}, #{amounId}, #{offerBindingPrice}, #{bindingId}, #{offerDeliveryPrice}, #{offerProcess1Price}, #{offerProcess2Price}, #{offerProcess3Price}, #{offerProcess4Price}, #{offerProcess5Price}, #{offerProcess1Name}, #{offerProcess2Name}, #{offerProcess3Name}, #{offerProcess4Name}, #{offerProcess5Name}, #{offerMachiningPrice}, #{offerTotalPrice})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mf_offer.mf_offer
+        <set>
+            <if test="typeId != null">
+                type_id = #{typeId},
+            </if>
+            <if test="offerProduceId != null">
+                offer_produce_id = #{offerProduceId},
+            </if>
+            <if test="offerTime != null">
+                offer_time = #{offerTime},
+            </if>
+            <if test="offerCustomerName != null and offerCustomerName != ''">
+                offer_customer_name = #{offerCustomerName},
+            </if>
+            <if test="offerProductName != null and offerProductName != ''">
+                offer_product_name = #{offerProductName},
+            </if>
+            <if test="sizeId != null">
+                size_id = #{sizeId},
+            </if>
+            <if test="offerNumber != null">
+                offer_number = #{offerNumber},
+            </if>
+            <if test="offerCoverGrammage != null">
+                offer_cover_grammage = #{offerCoverGrammage},
+            </if>
+            <if test="paperIdCover != null">
+                paper_id_cover = #{paperIdCover},
+            </if>
+            <if test="offerCoverP != null">
+                offer_cover_p = #{offerCoverP},
+            </if>
+            <if test="colorIdCover != null">
+                color_id_cover = #{colorIdCover},
+            </if>
+            <if test="offerCoverPrive != null">
+                offer_cover_prive = #{offerCoverPrive},
+            </if>
+            <if test="offerCoreGrammage != null">
+                offer_core_grammage = #{offerCoreGrammage},
+            </if>
+            <if test="paperIdCore != null">
+                paper_id_core = #{paperIdCore},
+            </if>
+            <if test="offerCoreP != null">
+                offer_core_p = #{offerCoreP},
+            </if>
+            <if test="colorIdCore != null">
+                color_id_core = #{colorIdCore},
+            </if>
+            <if test="offerCorePrice != null">
+                offer_core_price = #{offerCorePrice},
+            </if>
+            <if test="offerInsetGrammage != null">
+                offer_inset_grammage = #{offerInsetGrammage},
+            </if>
+            <if test="paperIdInset != null">
+                paper_id_inset = #{paperIdInset},
+            </if>
+            <if test="offerInsetP != null">
+                offer_inset_p = #{offerInsetP},
+            </if>
+            <if test="colorIdInset != null">
+                color_id_inset = #{colorIdInset},
+            </if>
+            <if test="offerInsetPrice != null">
+                offer_inset_price = #{offerInsetPrice},
+            </if>
+            <if test="offerAmounPrice != null">
+                offer_amoun_price = #{offerAmounPrice},
+            </if>
+            <if test="amounId != null">
+                amoun_id = #{amounId},
+            </if>
+            <if test="offerBindingPrice != null">
+                offer_binding_price = #{offerBindingPrice},
+            </if>
+            <if test="bindingId != null">
+                binding_id = #{bindingId},
+            </if>
+            <if test="offerDeliveryPrice != null">
+                offer_delivery_price = #{offerDeliveryPrice},
+            </if>
+            <if test="offerProcess1Price != null">
+                offer_process_1_price = #{offerProcess1Price},
+            </if>
+            <if test="offerProcess2Price != null">
+                offer_process_2_price = #{offerProcess2Price},
+            </if>
+            <if test="offerProcess3Price != null">
+                offer_process_3_price = #{offerProcess3Price},
+            </if>
+            <if test="offerProcess4Price != null">
+                offer_process_4_price = #{offerProcess4Price},
+            </if>
+            <if test="offerProcess5Price != null">
+                offer_process_5_price = #{offerProcess5Price},
+            </if>
+            <if test="offerProcess1Name != null and offerProcess1Name != ''">
+                offer_process_1_name = #{offerProcess1Name},
+            </if>
+            <if test="offerProcess2Name != null and offerProcess2Name != ''">
+                offer_process_2_name = #{offerProcess2Name},
+            </if>
+            <if test="offerProcess3Name != null and offerProcess3Name != ''">
+                offer_process_3_name = #{offerProcess3Name},
+            </if>
+            <if test="offerProcess4Name != null and offerProcess4Name != ''">
+                offer_process_4_name = #{offerProcess4Name},
+            </if>
+            <if test="offerProcess5Name != null and offerProcess5Name != ''">
+                offer_process_5_name = #{offerProcess5Name},
+            </if>
+            <if test="offerMachiningPrice != null">
+                offer_machining_price = #{offerMachiningPrice},
+            </if>
+            <if test="offerTotalPrice != null">
+                offer_total_price = #{offerTotalPrice},
+            </if>
+        </set>
+        where offer_id = #{offerId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mf_offer.mf_offer where offer_id = #{offerId}
+    </delete>
+
+</mapper>

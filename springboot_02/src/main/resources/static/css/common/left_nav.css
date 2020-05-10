@@ -1,0 +1,25 @@
+/*左侧导航栏*/
+#user_left_nav{
+    margin-top: 50px;
+    list-style-type: none;
+}
+#user_left_nav>li{
+    list-style-type: none;
+    border: 1px solid;
+    background-color: yellow;
+    display: block;
+    width: 50px;
+    margin: 10px 0 10px 0;
+}
+#user_left_nav>li>a{
+    color: red;
+    font-size: 35px;
+    text-align: center;
+}
+#user_left_nav>li>a:hover{
+    text-decoration: none;
+}
+/*body*/
+body{
+    background-color: #f6f8e9;
+}
