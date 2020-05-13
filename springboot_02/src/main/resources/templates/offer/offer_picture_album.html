@@ -4,25 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <title>报价页面</title>
+    <link rel="stylesheet" href="/static/css/common/offer/offer_picture.css"
+          th:href="@{/static/css/common/offer/offer_picture.css}">
     <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
     <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
     <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
     <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
     <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
     <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
-    <style>
-        #offer_div > table td {
-            text-align: center;
-            width: 150px;
-            height: 35px;
-        }
-
-        #offer_div > table th {
-            text-align: center;
-        }
-    </style>
 </head>
-<body>
 <body>
 <div class="container-fluid">
     <div class="row">
@@ -30,7 +20,7 @@
         <div class="col-md-11 mt-5">
             <h1 align="center">画册报价</h1><br><br>
             <div class="form-group" id="offer_div" :model="offer">
-                <table class="table-hover t1" border="1" cellpadding="0" cellspacing="0"
+                <table class="t1" border="1" cellpadding="1" cellspacing="0"
                        style="position: relative;">
                     <tr>
                         <th>日期</th>
@@ -128,12 +118,13 @@
                         </td>
                     </tr>
                 </table>
-                <table class="  table-hover t1" border="1" style="margin-top: 25px;" cellspacing="1"
+                <table class="t1" border="1" style="margin-top: 25px;" cellspacing="0"
                        cellpadding="1">
                     <tr>
                         <th>复膜</th>
                         <th>装订方式</th>
                         <th>配送方式</th>
+                        <th>特殊工艺</th>
                         <th>特殊工艺</th>
                         <th><input type="text" name="h1" id="hh1" v-model="offer.offerProcess1Name"></th>
                         <th><input type="text" name="h2" id="hh2" v-model="offer.offerProcess2Name"></th>
@@ -178,16 +169,21 @@
                     </tr>
                 </table>
                 <div id="hresult">
-                    <div style="position: absolute;">
-                        <button id="hsub" class="btn-danger"
+                    <div style="position: relative;">
+                        <button id="hsub" class="btn-danger float-right mr-5"
                                 style="width: 100px;height: 50px;font-size: 18px;" @click="toOffer()">立刻报价
                         </button>
-                        <h2>封面金额:<span id="hfmResult"></span></h2>
-                        <h2>内芯金额:<span id="hnxResult"></span></h2>
-                        <h2>插页金额:<span id="hcyResult"></span></h2>
-                        <h2>后期金额:<span id="hhjgResult"></span></h2>
-                        <h2>配送金额:<span id="hpsResult"></span></h2>
-                        <h1>总金额:<span id="hresultMoney"></span></h1>
+                        <button class="btn btn-info float-right mr-5"
+                                id="offerAgain"
+                                style="width: 100px;height: 50px;font-size: 18px;display: none;" @click="offerAgain()">
+                            再报一次
+                        </button>
+                        <h2>封面金额:<span id="hfmResult">{{offer.offerCoverPrive}}</span></h2>
+                        <h2>内芯金额:<span id="hnxResult">{{offer.offerCorePrice}}</span></h2>
+                        <h2>插页金额:<span id="hcyResult">{{offer.offerInsetPrice}}</span></h2>
+                        <h2>后期金额:<span id="hhjgResult">{{offer.offerMachiningPrice}}</span></h2>
+                        <h2>配送金额:<span id="hpsResult">{{offer.offerDeliveryPrice}}</span></h2>
+                        <h1>总金额:<span id="hresultMoney">{{offer.offerTotalPrice}}</span></h1>
                     </div>
                 </div>
             </div>
@@ -197,7 +193,7 @@
                     data() {
                         return {
                             offer: {
-                                typeId:1,
+                                typeId: 1,
                                 offerCustomerName: "",
                                 offerProductName: "",
                                 sizeId: "",
@@ -216,7 +212,7 @@
                                 colorIdInset: "",
                                 amounId: "",
                                 bindingId: "",
-                                offerDeliveryPrice: "",
+                                offerDeliveryPrice: 6,
                                 offerProcess1Price: 0,
                                 offerProcess2Price: 0,
                                 offerProcess3Price: 0,
@@ -227,24 +223,59 @@
                                 offerProcess3Name: "",
                                 offerProcess4Name: "",
                                 offerProcess5Name: "",
+                                offerCoverPrive: "",
+                                offerCorePrice: "",
+                                offerInsetPrice: "",
+                                offerMachiningPrice: "",
+                                offerTotalPrice: ""
                             }
                         }
                     },
                     methods: {
                         toOffer() {
-                            $.ajax({
-                                url: "/offer/price",
-                                type: "post",
-                                contentType: "application/json",
-                                data: JSON.stringify(this.offer),
-                                dataType: "text",
-                                success: function (msg) {
-                                    alert(msg);
-                                },
-                                error: function (msg) {
-                                    alert("调动失败");
-                                }
-                            });
+                            if (this.offer.sizeId == "" ||
+                                this.offer.offerNumber == "" ||
+                                this.offer.offerCoverGrammage == "" ||
+                                this.offer.offerCoverP == "" ||
+                                this.offer.colorIdCover == "" ||
+                                this.offer.paperIdCover == "" ||
+                                this.offer.offerCoreGrammage == "" ||
+                                this.offer.offerCoreP == "" ||
+                                this.offer.colorIdCore == "" ||
+                                this.offer.paperIdCore == ""
+                            ) {
+                                alert("请填写完整信息");
+                            } else {
+                                $.ajax({
+                                    url: "/offer/price/picture",
+                                    type: "post",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(this.offer),
+                                    dataType: "json",
+                                    success: function (msg) {
+                                        $("#hsub").hide();
+                                        $("#offerAgain").show();
+                                        //注入各种金额
+                                        offer.offer.offerCoverPrive = msg.offerCoverPrive;
+                                        offer.offer.offerCorePrice = msg.offerCorePrice;
+                                        offer.offer.offerInsetPrice = msg.offerInsetPrice;
+                                        offer.offer.offerTotalPrice = msg.offerTotalPrice;
+                                        offer.offer.offerMachiningPrice = msg.offerMachiningPrice;
+                                    },
+                                    error: function (msg) {
+                                        alert("调动失败");
+                                    }
+                                });
+                            }
+                        },
+                        offerAgain() {
+                            offer.offer.offerCoverPrive = "";
+                            offer.offer.offerCorePrice = "";
+                            offer.offer.offerInsetPrice = "";
+                            offer.offer.offerTotalPrice = "";
+                            offer.offer.offerMachiningPrice = "";
+                            $("#hsub").show();
+                            $("#offerAgain").hide();
                         }
                     }
                 });
@@ -252,6 +283,5 @@
         </div>
     </div>
 </div>
-</body>
 </body>
 </html>

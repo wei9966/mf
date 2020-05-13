@@ -1,0 +1,15 @@
+#admin_lef_nav{
+    margin-top: 50px;
+}
+#admin_lef_nav a{
+    padding-top: 20px;
+    color: black;
+    font-size: 20px;
+}
+#admin_lef_nav li{
+    background-color: ivory;
+    margin: 10px 0 10px 0;
+}
+#admin_lef_nav li:hover{
+    background-color: seashell;
+}

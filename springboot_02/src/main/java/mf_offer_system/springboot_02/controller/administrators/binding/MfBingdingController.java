@@ -1,4 +1,4 @@
-package mf_offer_system.springboot_02.controller;
+package mf_offer_system.springboot_02.controller.administrators.binding;
 
 import mf_offer_system.springboot_02.entity.MfBingding;
 import mf_offer_system.springboot_02.service.MfBingdingService;

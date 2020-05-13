@@ -37,4 +37,8 @@ public class UserController {
         return "reconciliation/reconciliation_index";
     }
 
+    @RequestMapping("/administrator")
+    public String toAdministrator() {
+        return "administrators/administrator_index";
+    }
 }

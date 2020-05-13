@@ -52,4 +52,5 @@ public interface MfPaperService {
      */
     boolean deleteById(Integer paperId);
 
+    int getKaiBie(int paperId);
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mf_offer_system.springboot_02.dao.MfRoleDao">
+
+    <resultMap type="mf_offer_system.springboot_02.entity.MfRole" id="MfRoleMap">
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+        <result property="roleType" column="role_type" jdbcType="VARCHAR"/>
+        <result property="permissiorId" column="permissior_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MfRoleMap">
+        select
+          role_id, role_type, permissior_id
+        from mf_offer.mf_role
+        where role_id = #{roleId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MfRoleMap">
+        select
+          role_id, role_type, permissior_id
+        from mf_offer.mf_role
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MfRoleMap">
+        select
+          role_id, role_type, permissior_id
+        from mf_offer.mf_role
+        <where>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="roleType != null and roleType != ''">
+                and role_type = #{roleType}
+            </if>
+            <if test="permissiorId != null">
+                and permissior_id = #{permissiorId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="roleId" useGeneratedKeys="true">
+        insert into mf_offer.mf_role(role_type, permissior_id)
+        values (#{roleType}, #{permissiorId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mf_offer.mf_role
+        <set>
+            <if test="roleType != null and roleType != ''">
+                role_type = #{roleType},
+            </if>
+            <if test="permissiorId != null">
+                permissior_id = #{permissiorId},
+            </if>
+        </set>
+        where role_id = #{roleId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mf_offer.mf_role where role_id = #{roleId}
+    </delete>
+
+</mapper>

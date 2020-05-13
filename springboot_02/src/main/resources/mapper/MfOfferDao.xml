@@ -58,13 +58,20 @@
         select
           offer_id, type_id, offer_produce_id, offer_time, offer_customer_name, offer_product_name, size_id, offer_number, offer_cover_grammage, paper_id_cover, offer_cover_p, color_id_cover, offer_cover_prive, offer_core_grammage, paper_id_core, offer_core_p, color_id_core, offer_core_price, offer_inset_grammage, paper_id_inset, offer_inset_p, color_id_inset, offer_inset_price, offer_amoun_price, amoun_id, offer_binding_price, binding_id, offer_delivery_price, offer_process_1_price, offer_process_2_price, offer_process_3_price, offer_process_4_price, offer_process_5_price, offer_process_1_name, offer_process_2_name, offer_process_3_name, offer_process_4_name, offer_process_5_name, offer_machining_price, offer_total_price
         from mf_offer.mf_offer
+        order by offer_time desc
         limit #{offset}, #{limit}
     </select>
 
     <!--通过实体作为筛选条件查询-->
     <select id="queryAll" resultMap="MfOfferMap">
         select
-          offer_id, type_id, offer_produce_id, offer_time, offer_customer_name, offer_product_name, size_id, offer_number, offer_cover_grammage, paper_id_cover, offer_cover_p, color_id_cover, offer_cover_prive, offer_core_grammage, paper_id_core, offer_core_p, color_id_core, offer_core_price, offer_inset_grammage, paper_id_inset, offer_inset_p, color_id_inset, offer_inset_price, offer_amoun_price, amoun_id, offer_binding_price, binding_id, offer_delivery_price, offer_process_1_price, offer_process_2_price, offer_process_3_price, offer_process_4_price, offer_process_5_price, offer_process_1_name, offer_process_2_name, offer_process_3_name, offer_process_4_name, offer_process_5_name, offer_machining_price, offer_total_price
+        offer_id, type_id, offer_produce_id, offer_time, offer_customer_name, offer_product_name, size_id, offer_number,
+        offer_cover_grammage, paper_id_cover, offer_cover_p, color_id_cover, offer_cover_prive, offer_core_grammage,
+        paper_id_core, offer_core_p, color_id_core, offer_core_price, offer_inset_grammage, paper_id_inset,
+        offer_inset_p, color_id_inset, offer_inset_price, offer_amoun_price, amoun_id, offer_binding_price, binding_id,
+        offer_delivery_price, offer_process_1_price, offer_process_2_price, offer_process_3_price,
+        offer_process_4_price, offer_process_5_price, offer_process_1_name, offer_process_2_name, offer_process_3_name,
+        offer_process_4_name, offer_process_5_name, offer_machining_price, offer_total_price
         from mf_offer.mf_offer
         <where>
             <if test="offerId != null">
@@ -325,5 +332,86 @@
     <delete id="deleteById">
         delete from mf_offer.mf_offer where offer_id = #{offerId}
     </delete>
+
+    <!--查询总条数-->
+    <select id="queryAllCounts" resultType="integer">
+        select count(*) from mf_offer;
+    </select>
+    <resultMap type="mf_offer_system.springboot_02.entity.MfOffer" id="mfOfferMap">
+        <result property="offerId" column="offer_id"/>
+        <result property="typeId" column="type_id"/>
+        <result property="offerProduceId" column="offer_produce_id"/>
+        <result property="offerTime" column="offer_time"/>
+        <result property="offerCustomerName" column="offer_customer_name"/>
+        <result property="offerProductName" column="offer_product_name"/>
+        <result property="sizeId" column="size_id"/>
+        <result property="offerNumber" column="offer_number"/>
+        <result property="offerCoverGrammage" column="offer_cover_grammage"/>
+        <result property="paperIdCover" column="paper_id_cover"/>
+        <result property="offerCoverP" column="offer_cover_p"/>
+        <result property="colorIdCover" column="color_id_cover"/>
+        <result property="offerCoverPrive" column="offer_cover_prive"/>
+        <result property="offerCoreGrammage" column="offer_core_grammage"/>
+        <result property="paperIdCore" column="paper_id_core"/>
+        <result property="offerCoreP" column="offer_core_p"/>
+        <result property="colorIdCore" column="color_id_core"/>
+        <result property="offerCorePrice" column="offer_core_price"/>
+        <result property="offerInsetGrammage" column="offer_inset_grammage"/>
+        <result property="paperIdInset" column="paper_id_inset"/>
+        <result property="offerInsetP" column="offer_inset_p"/>
+        <result property="colorIdInset" column="color_id_inset"/>
+        <result property="offerInsetPrice" column="offer_inset_price"/>
+        <result property="offerAmounPrice" column="offer_amoun_price"/>
+        <result property="amounId" column="amoun_id"/>
+        <result property="offerBindingPrice" column="offer_binding_price"/>
+        <result property="bindingId" column="binding_id"/>
+        <result property="offerDeliveryPrice" column="offer_delivery_price"/>
+        <result property="offerProcess1Price" column="offer_process_1_price"/>
+        <result property="offerProcess2Price" column="offer_process_2_price"/>
+        <result property="offerProcess3Price" column="offer_process_3_price"/>
+        <result property="offerProcess4Price" column="offer_process_4_price"/>
+        <result property="offerProcess5Price" column="offer_process_5_price"/>
+        <result property="offerProcess1Name" column="offer_process_1_name"/>
+        <result property="offerProcess2Name" column="offer_process_2_name"/>
+        <result property="offerProcess3Name" column="offer_process_3_name"/>
+        <result property="offerProcess4Name" column="offer_process_4_name"/>
+        <result property="offerProcess5Name" column="offer_process_5_name"/>
+        <result property="offerMachiningPrice" column="offer_machining_price" jdbcType="OTHER"/>
+        <result property="offerTotalPrice" column="offer_total_price"/>
+        <result property="sizeType" column="paper_type"/>
+        <result property="type" column="type_name"/>
+        <result property="bindingType" column="binding_type"/>
+        <result property="amounType" column="amoun_type"/>
+        <result property="paperCoverType" column="cover_paper_type"/>
+        <result property="paperCoreType" column="core_paper_type"/>
+        <result property="paperInsetType" column="inset_paper_type"/>
+        <result property="coverColorType" column="cover_color_type"/>
+        <result property="coreColorType" column="core_color_type"/>
+        <result property="insetColorType" column="inser_color_type"/>
+    </resultMap>
+    <select id="queryOfferById" parameterType="long" resultMap="mfOfferMap">
+    select a.*,b.`paper_type`
+        ,c.`type_name`,
+        g.`amoun_type`,
+        d.`color_type` as cover_color_type,
+        e.`color_type` as core_color_type,
+        f.`color_type` as inser_color_type,
+        i.`tp_type` as cover_paper_type,
+        j.`tp_type` as core_paper_type,
+        k.`tp_type` as inset_paper_type,
+        h.`binding_type`
+        from mf_offer  a
+        inner join mf_paper b on a.`size_id`=b.`paper_id`
+        inner join mf_type c on a.`type_id`=c.`type_id`
+        inner join mf_color d on a.`color_id_cover`=d.`color_id`
+        left join mf_color e on a.`color_id_core`=e.`color_id`
+        left join mf_color f on a.`color_id_inset`=f.`color_id`
+        left join mf_amoun g on a.`amoun_id`=g.`amoun_id`
+        left join mf_bingding h on a.`binding_id`=h.`binding_id`
+        inner join mf_tonprice i on a.`paper_id_cover`=i.`tp_id`
+        left join mf_tonprice j on a.`paper_id_cover`=j.`tp_id`
+        left join mf_tonprice k on a.`paper_id_inset`=k.`tp_id`
+        where offer_id=#{offerId};
+    </select>
 
 </mapper>

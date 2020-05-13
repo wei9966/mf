@@ -76,4 +76,10 @@ public class MfPaperServiceImpl implements MfPaperService {
     public boolean deleteById(Integer paperId) {
         return this.mfPaperDao.deleteById(paperId) > 0;
     }
+
+    @Override
+    public int getKaiBie(int paperId) {
+        MfPaper mfPaper = mfPaperDao.queryById(paperId);
+        return Integer.valueOf(mfPaper.getPaperType().substring(mfPaper.getPaperType().indexOf("度")+1,mfPaper.getPaperType().indexOf("开")))/2;
+    }
 }

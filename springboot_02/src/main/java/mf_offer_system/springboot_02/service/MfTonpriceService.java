@@ -1,6 +1,8 @@
 package mf_offer_system.springboot_02.service;
 
+import mf_offer_system.springboot_02.entity.MfOffer;
 import mf_offer_system.springboot_02.entity.MfTonprice;
+
 import java.util.List;
 
 /**
@@ -52,4 +54,5 @@ public interface MfTonpriceService {
      */
     boolean deleteById(Integer tpId);
 
+     double  countSinglePaper(MfOffer mfOffer, int type);
 }

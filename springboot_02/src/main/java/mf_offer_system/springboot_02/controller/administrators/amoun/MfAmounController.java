@@ -1,4 +1,4 @@
-package mf_offer_system.springboot_02.controller;
+package mf_offer_system.springboot_02.controller.administrators.amoun;
 
 import mf_offer_system.springboot_02.entity.MfAmoun;
 import mf_offer_system.springboot_02.service.MfAmounService;

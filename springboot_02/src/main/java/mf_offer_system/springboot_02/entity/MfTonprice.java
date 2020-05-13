@@ -26,29 +26,4 @@ public class MfTonprice implements Serializable {
     */
     private Float tpPrice;
 
-
-    public Integer getTpId() {
-        return tpId;
-    }
-
-    public void setTpId(Integer tpId) {
-        this.tpId = tpId;
-    }
-
-    public String getTpType() {
-        return tpType;
-    }
-
-    public void setTpType(String tpType) {
-        this.tpType = tpType;
-    }
-
-    public Float getTpPrice() {
-        return tpPrice;
-    }
-
-    public void setTpPrice(Float tpPrice) {
-        this.tpPrice = tpPrice;
-    }
-
 }

@@ -7,8 +7,13 @@
 </head>
 <body>
         <div th:fragment="type">
-            <ul>
-                <li><a th:href="@{/offer/pictureAlbum}">黑白报价</a></li>
+            <ul class="nav justify-content-center" id="offer_type_nav">
+                <li class="nav-item">
+                    <a class="nav-link"  th:href="@{/offer/pictureAlbum}">画册报价</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">黑白报价</a>
+                </li>
             </ul>
         </div>
 </body>

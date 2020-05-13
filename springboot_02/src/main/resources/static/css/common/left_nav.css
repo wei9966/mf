@@ -15,11 +15,12 @@
     color: red;
     font-size: 35px;
     text-align: center;
+    display: block;
 }
 #user_left_nav>li>a:hover{
     text-decoration: none;
 }
 /*body*/
 body{
-    background-color: #f6f8e9;
+    background-color: #ffffff;
 }

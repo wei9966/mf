@@ -1,6 +1,8 @@
 package mf_offer_system.springboot_02.service;
 
 import mf_offer_system.springboot_02.entity.MfOffer;
+import mf_offer_system.springboot_02.util.PageUtils;
+
 import java.util.List;
 
 /**
@@ -52,4 +54,7 @@ public interface MfOfferService {
      */
     boolean deleteById(Long offerId);
 
+    PageUtils queryByPage(int currentPage, int pageSize);
+
+    MfOffer queryOfferById(Long offerId);
 }

@@ -1,0 +1,52 @@
+#offer_div td {
+    text-align: center;
+    width: 185px;
+    height: 45px;
+}
+
+#offer_div th {
+    text-align: center;
+    width: 185px;
+    height: 45px;
+}
+
+#offer_div select {
+    width: 185px;
+    height: 35px;
+}
+
+#offer_div input {
+    width: 185px;
+    height: 35px;
+}
+
+#hresult > div > h2 span {
+    color: red;
+}
+
+#hresult > div > h1 span {
+    color: red;
+}
+
+/*offer_result*/
+#offer_result_div td {
+    text-align: center;
+    width: 185px;
+    height: 45px;
+}
+
+#offer_result_div th {
+    text-align: center;
+    width: 185px;
+    height: 45px;
+}
+
+#offer_result_div select {
+    width: 185px;
+    height: 35px;
+}
+
+#offer_result_div input {
+    width: 185px;
+    height: 35px;
+}

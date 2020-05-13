@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="adminLeftNav">
+    <ul class="nav flex-column" id="admin_lef_nav">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/mfTonprice/tonPage}">吨价</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">常用尺寸</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">复膜</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">装订</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">印刷类型</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">墨色</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/logout}">退出系统</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

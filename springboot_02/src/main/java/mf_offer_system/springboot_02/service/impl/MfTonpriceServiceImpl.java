@@ -1,8 +1,12 @@
 package mf_offer_system.springboot_02.service.impl;
 
+import mf_offer_system.springboot_02.dao.MfPaperDao;
+import mf_offer_system.springboot_02.entity.MfOffer;
+import mf_offer_system.springboot_02.entity.MfPaper;
 import mf_offer_system.springboot_02.entity.MfTonprice;
 import mf_offer_system.springboot_02.dao.MfTonpriceDao;
 import mf_offer_system.springboot_02.service.MfTonpriceService;
+import mf_offer_system.springboot_02.util.ConstantUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,8 +20,12 @@ import java.util.List;
  */
 @Service("mfTonpriceService")
 public class MfTonpriceServiceImpl implements MfTonpriceService {
+
     @Resource
     private MfTonpriceDao mfTonpriceDao;
+
+    @Resource
+    private MfPaperDao mfPaperDao;
 
     /**
      * 通过ID查询单条数据
@@ -34,7 +42,7 @@ public class MfTonpriceServiceImpl implements MfTonpriceService {
      * 查询多条数据
      *
      * @param offset 查询起始位置
-     * @param limit 查询条数
+     * @param limit  查询条数
      * @return 对象列表
      */
     @Override
@@ -75,5 +83,45 @@ public class MfTonpriceServiceImpl implements MfTonpriceService {
     @Override
     public boolean deleteById(Integer tpId) {
         return this.mfTonpriceDao.deleteById(tpId) > 0;
+    }
+
+    /**
+     * @param mfOffer 报价单
+     * @param type    看是封面还是内芯或者插页
+     * @return 单价
+     */
+    @Override
+    public double countSinglePaper(MfOffer mfOffer, int type) {
+        //吨价/
+        //先根据纸型获取当前报价的纸的类型的吨价
+        MfTonprice mfTonprice = null;
+        //根据尺寸获取尺寸变量
+        MfPaper mfPaper = mfPaperDao.queryById(mfOffer.getSizeId());
+        //根据传进来的尺寸判断时大度还是正度
+        //令的常量
+        int order;
+        if (mfPaper.getPaperType().contains(ConstantUtil.SIZE_TYPE_BIG)) {
+            order = ConstantUtil.TON_PRICE_LING_BIG;
+        } else {
+            order = ConstantUtil.TON_PRICE_LING_NOMAL;
+        }
+        Integer grammage = 0;
+        switch (type) {
+            case 1:
+                grammage = mfOffer.getOfferCoverGrammage();
+                mfTonprice=mfTonpriceDao.queryById(mfOffer.getPaperIdCover());
+                break;
+            case 2:
+                grammage = mfOffer.getOfferCoreGrammage();
+                mfTonprice=mfTonpriceDao.queryById(mfOffer.getPaperIdCore());
+                break;
+            case 3:
+                grammage = mfOffer.getOfferInsetGrammage();
+                mfTonprice=mfTonpriceDao.queryById(mfOffer.getPaperIdInset());
+                break;
+            default:
+                break;
+        }
+        return mfTonprice.getTpPrice() / order * grammage / 500;
     }
 }

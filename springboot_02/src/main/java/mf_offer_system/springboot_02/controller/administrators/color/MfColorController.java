@@ -1,4 +1,4 @@
-package mf_offer_system.springboot_02.controller;
+package mf_offer_system.springboot_02.controller.administrators.color;
 
 import mf_offer_system.springboot_02.entity.MfColor;
 import mf_offer_system.springboot_02.service.MfColorService;

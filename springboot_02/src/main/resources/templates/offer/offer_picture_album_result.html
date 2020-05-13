@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/static/css/common/offer/offer_picture.css"
+          th:href="@{/static/css/common/offer/offer_picture.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+    <script src="/static/js/moment.js" th:src="@{/static/js/moment.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav} "></div>
+        <div class="col-md-11 mt-5">
+            <h1 align="center">画册报价</h1><br><br>
+            <div class="form-group" id="offer_result_div" :model="offerResult">
+                <div hidden id="offerIdDive" th:attr="data-offerid=${offerId}"></div>
+                <table class="t1" border="1" cellpadding="1" cellspacing="0"
+                       style="position: relative;">
+                    <tr>
+                        <th>日期</th>
+                        <th>客户名称</th>
+                        <th>文件名称</th>
+                        <th>成品尺寸</th>
+                        <th>成品数量</th>
+                        <th>封面克数</th>
+                        <th>封面纸型</th>
+                        <th>封面P数</th>
+                        <th>封面墨色</th>
+                    </tr>
+                    <tr>
+                        <td v-model="offerResult.offerTime">
+                            {{offerResult.offerTime}}
+                        </td>
+                        <td>
+                            {{offerResult.offerCustomerName}}
+                        </td>
+                        <td v-model="offerResult.offerProductName">
+                            {{offerResult.offerProductName}}
+                        </td>
+                        <td v-model="offerResult.sizeType">
+                            {{offerResult.sizeType}}
+                        </td>
+                        <td v-model="offerResult.offerNumber">
+                            {{offerResult.offerNumber}}
+                        </td>
+                        <td v-model="offerResult.offerCoverGrammage">
+                            {{ offerResult.offerCoverGrammage}}
+                        </td>
+                        <td v-model="offerResult.paperCoverType">
+                            {{ offerResult.paperCoverType}}
+                        </td>
+                        <td v-model="offerResult.offerCoverP">
+                            {{ offerResult.offerCoverP}}
+                        </td>
+                        <td v-model="offerResult.coverColorType">
+                            {{ offerResult.coverColorType}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" rowspan="4" style="border-left: 0px white;"></td>
+                        <th>内芯克数</th>
+                        <th>内芯纸型</th>
+                        <th>内芯P数</th>
+                        <th>内芯墨色</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ offerResult.offerCoreGrammage}}
+                        </td>
+                        <td>
+                            {{ offerResult.paperCoreType}}
+                        </td>
+                        <td>
+                            {{ offerResult.offerCoreP}}
+                        </td>
+                        <td>
+                            {{ offerResult.coreColorType}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>插页克数</th>
+                        <th>插页纸型</th>
+                        <th>插页P数</th>
+                        <th>插页墨色</th>
+                    </tr>
+                    <tr>
+                        <td>{{ offerResult.offerInsetGrammage}}</td>
+                        <td>{{ offerResult.paperInsetType}}</td>
+                        <td>{{ offerResult.offerInsetP}}</td>
+                        <td>{{ offerResult.insetColorType}}</td>
+                    </tr>
+                </table>
+                <table class="t1" border="1" style="margin-top: 25px;" cellspacing="0"
+                       cellpadding="1">
+                    <tr>
+                        <th>复膜</th>
+                        <th>装订方式</th>
+                        <th>配送方式</th>
+                        <th>特殊工艺</th>
+                        <th v-model="offerResult.offerProcess1Name">
+                            {{ offerResult.offerProcess1Name}}
+                        </th>
+                        <th v-model="offerResult.offerProcess2Name">
+                            {{ offerResult.offerProcess2Name}}
+                        </th>
+                        <th v-model="offerResult.offerProcess3Name">
+                            {{ offerResult.offerProcess3Name}}
+                        </th>
+                        <th v-model="offerResult.offerProcess4Name">
+                            {{ offerResult.offerProcess4Name}}
+                        </th>
+                        <th v-model="offerResult.offerProcess5Name">
+                            {{ offerResult.offerProcess5Name}}
+                        </th>
+                    </tr>
+                    <tr>
+                        <td v-model="offerResult.amounType">
+                            {{ offerResult.amounType}}
+                        </td>
+                        <td v-model="offerResult.bindingType">
+                            {{ offerResult.bindingType}}
+                        </td>
+                        <td>
+                            自取
+                        </td>
+                        <th>
+                            金额
+                        </th>
+                        <td v-model="offerResult.offerProcess1Price">
+                            {{ offerResult.offerProcess1Price}}
+                        </td>
+                        <td v-model="offerResult.offerProcess2Price">
+                            {{ offerResult.offerProcess2Price}}
+                        </td>
+                        <td v-model="offerResult.offerProcess3Price">
+                            {{ offerResult.offerProcess3Price}}
+                        </td>
+                        <td v-model="offerResult.offerProcess4Price">
+                            {{ offerResult.offerProcess4Price}}
+                        </td>
+                        <td v-model="offerResult.offerProcess5Price">
+                            {{ offerResult.offerProcess5Price}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <th>配送金额</th>
+                        <td v-model="offerResult.offerDeliveryPrice">
+                            {{ offerResult.offerDeliveryPrice}}
+                        </td>
+                        <td colspan="6"></td>
+                    </tr>
+                </table>
+                <div id="hresult">
+                    <div style="position: relative;">
+                        <button id="hsub" class="btn btn-success float-right mr-5"
+                                style="width: 100px;height: 50px;font-size: 18px;"
+                                v-if="offerResult.offerProduceId==0">
+                            立刻生产
+                        </button>
+                        <button id="modifyOffer" class="btn btn-danger float-right mr-5"
+                                style="width: 100px;height: 50px;font-size: 18px;"
+                                data-toggle="modal" data-target="#modifyBox"
+                                v-if="offerResult.offerProduceId==0">
+                            更新报价
+                        </button>
+                        <h2>封面金额:<span id="hfmResult" v-model="offerResult.offerCoverPrive">
+                            {{ offerResult.offerCoverPrive}}
+                        </span></h2>
+                        <h2>内芯金额:<span id="hnxResult"
+                                       v-model="offerResult.offerCorePrice">
+                            {{ offerResult.offerCorePrice}}
+                        </span></h2>
+                        <h2>插页金额:<span id="hcyResult"
+                                       v-model="offerResult.offerInsetPrice">
+                            {{ offerResult.offerInsetPrice}}
+                        </span></h2>
+                        <h2>后期金额:<span id="hhjgResult"
+                                       v-model="offerResult.offerMachiningPrice">
+                            {{ offerResult.offerMachiningPrice}}
+                        </span></h2>
+                        <h2>配送金额:<span id="hpsResult"
+                                       v-model="offerResult.offerDeliveryPrice">
+                            {{ offerResult.offerDeliveryPrice}}
+                        </span></h2>
+                        <h1>总金额:<span id="hresultMoney"
+                                      v-model="offerResult.offerTotalPrice">
+                            {{ offerResult.offerTotalPrice}}
+                        </span></h1>
+                    </div>
+                </div>
+                <div class="modal fade" id="modifyBox" data-backdrop="static" tabindex="-1" role="dialog"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">修改数据</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <label class="mr-3">客户名称</label>
+                                <input type="text" v-model="offerResult.offerCustomerName">
+                                <label class="mr-3">产品名称</label>
+                                <input type="text" v-model="offerResult.offerProductName">
+                                <label class="mr-3">成品数量</label>
+                                <input type="text" v-model="offerResult.offerNumber">
+                                <label class="mr-3">成品尺寸</label>
+                                <select name="hcpSize" id="hcpSize" v-model="offerResult.sizeId">
+                                    <option th:each="paper:${mfPapers}" th:value="${paper.paperId}"
+                                            th:text="${paper.paperType}"></option>
+                                </select>
+                                <br><br>
+                                <label class="mr-3">封面克数</label>
+                                <input type="text" v-model="offerResult.offerCoverGrammage">
+                                <label class="mr-3">封面纸型</label>
+                                <select name="fmType" id="hfmType" v-model="offerResult.paperIdCover">
+                                    <option th:each="ton:${mfTonprices}" th:value="${ton.tpId}"
+                                            th:text="${ton.tpType}"></option>
+                                </select>
+                                <label class="mr-4">封面p数</label>
+                                <input type="text" v-model="offerResult.offerCoverP"><br><br>
+                                <label class="mr-3">内芯克数</label>
+                                <input type="text" v-model="offerResult.offerCoreGrammage">
+                                <label class="mr-3">内芯纸型</label>
+                                <select name="fmType" v-model="offerResult.paperIdCore">
+                                    <option th:each="ton:${mfTonprices}" th:value="${ton.tpId}"
+                                            th:text="${ton.tpType}"></option>
+                                </select>
+                                <label class="mr-3">内芯p数</label>
+                                <input type="text" v-model="offerResult.offerCoreP"><br><br>
+                                <label class="mr-3">复膜方式</label>
+                                <select v-model="offerResult.amounId">
+                                    <option th:each="amoun:${mfAmouns}" th:text="${amoun.amounType}"
+                                            th:value="${amoun.amounId}"></option>
+                                </select>
+                                <label class="mr-3">装订方式</label>
+                                <select name="zd" id="hzd" v-model="offerResult.bindingId">
+                                    <option th:each="bingdings:${mfBingdings}" th:value="${bingdings.bindingId}"
+                                            th:text="${bingdings.bindingType}"></option>
+                                </select>
+                                <label class="mr-3">配送金额</label>
+                                <input type="text" v-model="offerResult.offerDeliveryPrice"><br><br>
+                                <br><br>
+                                <label class="mr-5 ml-5">特殊工艺1</label>
+                                <label class="mr-5 ml-5">特殊工艺2</label>
+                                <label class="mr-5 ml-5">特殊工艺3</label>
+                                <label class="mr-5 ml-5">特殊工艺4</label>
+                                <label class="mr-5 ml-5">特殊工艺5</label>
+                                <br>
+                                <input type="text" v-model="offerResult.offerProcess1Name">
+                                <input type="text" v-model="offerResult.offerProcess2Name">
+                                <input type="text" v-model="offerResult.offerProcess3Name">
+                                <input type="text" v-model="offerResult.offerProcess4Name">
+                                <input type="text" v-model="offerResult.offerProcess5Name">
+                                <br>
+                                <input type="text" v-model="offerResult.offerProcess1Price">
+                                <input type="text" v-model="offerResult.offerProcess2Price">
+                                <input type="text" v-model="offerResult.offerProcess3Price">
+                                <input type="text" v-model="offerResult.offerProcess4Price">
+                                <input type="text" v-model="offerResult.offerProcess5Price">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消更新</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" @click="updatePrice">
+                                    提交更新
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                var offer_result = new Vue({
+                    el: "#offer_result_div",
+                    data() {
+                        return {
+                            offerResult: {
+                                offerTime: ""
+                            }
+                        }
+                    },
+                    methods: {
+                        updatePrice() {
+                            $.ajax({
+                                url: "/offer/price/picture/update",
+                                type: "post",
+                                contentType: "application/json",
+                                data: JSON.stringify(this.offerResult),
+                                dataType: "json",
+                                success: function (msg) {
+                                    offer_result.getSingleOfferByOfferId();
+                                },
+                                error: function (msg) {
+                                    alert("调动失败");
+                                }
+                            });
+                        },
+                        getSingleOfferByOfferId() {
+                            var offerId = $("#offerIdDive").data("offerid");
+                            $.ajax({
+                                url: `/offer/select/one/${offerId}`,
+                                type: "post",
+                                dataType: "json",
+                                success(msg) {
+                                    offer_result.offerResult = msg;
+                                    offer_result.offerResult.offerTime = moment(msg.offerTime).format("yyyy-MM-DD");
+                                },
+                                error() {
+                                    alert("调用失败");
+                                }
+                            })
+                        }
+                    },
+                    mounted() {
+                        this.getSingleOfferByOfferId();
+                    },
+                });
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

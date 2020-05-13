@@ -64,4 +64,16 @@ public interface MfOfferDao {
      */
     int deleteById(Long offerId);
 
+    /**
+     * 查询总条数
+     * @return
+     */
+    int queryAllCounts();
+
+    /**
+     * 查询完整数据
+     * @param offerId
+     * @return
+     */
+    MfOffer queryOfferById(@Param("offerId") Long offerId);
 }
