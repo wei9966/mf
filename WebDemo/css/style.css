@@ -1,0 +1,33 @@
+.t1 tr td{
+    width: 160px;
+    text-align: center;
+    font-size: 18px;
+}
+.t1 tr th{
+    width: 160px;
+    text-align: center;
+    font-size: 18px;
+}
+.t1 tr{
+    line-height: 40px;
+}
+.t1 input{
+
+    width: 150px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0);
+}
+.t1 select{
+    width: 150px;
+    text-align: center;
+}
+#result{
+    margin: 0px auto;
+}
+#resultMoney{
+    color: red;
+    font-size: 30px;
+}
+#result div h2 span{
+    color: red;
+}
