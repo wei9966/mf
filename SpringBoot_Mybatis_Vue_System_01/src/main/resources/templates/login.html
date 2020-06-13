@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <script src="../static/js/vue.min.js"></script>
+    <script src="../static/js/jquery-1.12.4.js"></script>
+    <style>
+        #loginDiv table tr td,th{
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginDiv" align="center">
+        <table align="center" border="1" cellspacing="0" cellpadding="0">
+            <tr>
+        <th>
+            <td colspan="2">登录</td>
+        </th>
+            </tr>
+        <tr>
+            <td>用户名:</td>
+            <td><input type="text" id="username" name="userName" v-model="username"></td>
+        </tr>
+            <tr>
+                <td>密码:</td>
+                <td><input type="password" id="password" name="password" v-model="password"></td>
+            </tr>
+        </tr>
+            <tr>
+                <td><input type="button" value="登录" id="login" v-on:click="login"></td>
+                <td><input type="button" value="注册" id="register"></td>
+            </tr>
+        </table>
+
+        <script>
+            var login=new Vue({
+                el:"#loginDiv",
+                data:{
+                    username:"",
+                    password:""
+                },
+                methods:{
+                    login:function () {
+                        $.post("/user/login",
+                            {"username":this.username,"password":this.password},
+                            function (message) {
+                                if (message.code==200){
+                                    location.href="/index"
+                                }else{
+                                    alert(message.message+"\t"+message.code);
+                                }
+                            }
+                        )
+                        // alert(this.username+"\t"+this.password);
+                    }
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
