@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>工单打印页面</title>
+    <link rel="stylesheet" href="/static/css/common/offer/offer_picture.css"
+          th:href="@{/static/css/common/offer/offer_picture.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+    <script src="/static/js/moment.js" th:src="@{/static/js/moment.js}"></script>
+    <script src="/static/js/print.js" th:src="@{/static/js/print.js}"></script>
+</head>
+<style>
+    #print_div #work_table th, #print_div #work_table td {
+        width: 110px;
+        height: 70px;
+        font-size: 18px;
+        text-align: center;
+    }
+
+    #print_div #delivery_table th, #print_div #delivery_table td {
+        height: 70px;
+        width: 210px;
+        text-align: center;
+        font-size: 18px;
+    }
+</style>
+<script>
+    $(function () {
+        $("#printNow").click(() => {
+            $("#print_div").print({}
+            );
+        })
+    });
+</script>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav} "></div>
+        <div class="col-11">
+            <div class="row">
+                <div class="col-12" id="print_div">
+                    <h3 align="center">明发工单</h3>
+                    <table align="center" border="1" cellpadding="0" cellspacing="0" id="work_table">
+                        <tr>
+                            <th>开单日期</th>
+                            <td th:text="${#dates.format(work.workTime,'yyyy-MM-dd')}" colspan="5">
+                            </td>
+                            <th>客户名称</th>
+                            <td th:text="${work.workCustomerName}" colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <th rowspan="2">常规信息</th>
+                            <th> 印刷名称</th>
+                            <td th:text="${work.workProductName}" colspan="4">
+
+                            </td>
+                            <th>成品数量</th>
+                            <td th:text="${work.workNumber}" colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <th>接单日期</th>
+                            <td th:text="${#dates.format(work.workOfferTime,'yyyy-MM-dd')}" colspan="4"></td>
+                            <th>交货日期</th>
+                            <td th:text="${#dates.format(work.workDeliveryTime,'yyyy-MM-dd')}" colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <th rowspan="5">印刷工艺</th>
+                            <th>印刷机台</th>
+                            <td th:text="${work.machineType}" colspan="2">
+
+                            </td>
+                            <th>产品尺寸</th>
+                            <td th:text="${work.productSizeType}" colspan="2"></td>
+                            <th>拼板尺寸</th>
+                            <td th:text="${work.paneSizeType}" colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>印刷信息</th>
+                            <th>纸张</th>
+                            <th>开别</th>
+                            <th>正数</th>
+                            <th>放数</th>
+                            <th>合全开数</th>
+                            <th>印刷墨色</th>
+                            <th colspan="2">印版数量</th>
+                        </tr>
+                        <tr th:if="${work.workCoverGrammage}!=null">
+                            <th>封面</th>
+                            <td th:text="${work.workCoverGrammage}+'克'+${work.coverPaperType}"></td>
+                            <td th:text="${work.workCoverLeave}"></td>
+                            <td th:text="${work.workNumber}+'*'+${work.coverPostsNumber}"></td>
+                            <td th:text="${work.workCoverPlayNumber}+'*'+${work.coverPostsNumber}"></td>
+                            <td th:text="${work.workCoverAlloysNumber}"></td>
+                            <td th:text="${work.coverColorType}"></td>
+                            <td colspan="2" th:text="${work.workCoverLeave}"></td>
+                        </tr>
+                        <tr th:if="${work.workCoverGrammage}==null">
+                            <th>封面</th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr th:if="${work.workCoreGrammage}==null">
+                            <th>内芯</th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr th:if="${work.workCoreGrammage}!=null">
+                            <th>内芯</th>
+                            <td th:text="${work.workCoreGrammage}+'克'+${work.corePaperType}"></td>
+                            <td th:text="${work.workCoreLeave}"></td>
+                            <td th:text="${work.workNumber}+'*'+${work.corePostsNumber}"></td>
+                            <td th:text="${work.workCorePlayNumber}+'*'+${work.corePostsNumber}"></td>
+                            <td th:text="${work.workCoreAlloysNumber}"></td>
+                            <td th:text="${work.coreColorType}"></td>
+                            <td colspan="2" th:text="${work.workCoreLeave}"></td>
+                        </tr>
+                        <tr th:if="${work.workInsetGrammage}==null">
+                            <th>插页</th>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th>后加工</th>
+                            <td colspan="9"></td>
+                        </tr>
+                    </table>
+
+                    <div style="margin-top: 20%">
+                        <h3 align="center">送货单</h3>
+                        <div class="ml-5 mt-3 float-left" style="font-size: 20px;">收货单位:</div>
+                        <div class="mr-5 mt-3 float-right" style="font-size: 20px;">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</div>
+                    </div>
+                    <br><br><br><br>
+                    <table align="center" border="1" cellpadding="0" cellspacing="0" id="delivery_table">
+                        <tr>
+                            <th>印刷品名称</th>
+                            <th>尺寸</th>
+                            <th>数量</th>
+                            <th>金额</th>
+                            <th>备注</th>
+                        </tr>
+                        <tr>
+                            <td th:text="${work.workProductName}"></td>
+                            <td th:text="${work.productSizeType}"></td>
+                            <td th:text="${work.workNumber}"></td>
+                            <td th:text="${work.workTotalPrice}"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                合计金额
+                            </td>
+                            <td colspan="4"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-11">
+        </div>
+        <div class="col-1">
+            <button class="btn btn-success float-right" id="printNow">立刻打印</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>

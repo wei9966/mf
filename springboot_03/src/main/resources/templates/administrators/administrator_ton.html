@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改吨价</title>
+    <link rel="stylesheet" href="/static/css/common/admin_left_nav.css"
+          th:href="@{/static/css/common/admin_left_nav.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-1" th:insert="~{administrators/common/admin_left_nav :: adminLeftNav}">
+
+        </div>
+        <div class="col-11 mt-5" id="ton_div">
+            <h1 align="center" class="mb-4">吨价修改</h1>
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">编号</th>
+                    <th scope="col">类型</th>
+                    <th scope="col">价格</th>
+                    <th scope="col">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ton:${mfTonprices}">
+                    <th scope="row" th:text="${ton.tpId}"></th>
+                    <td th:text="${ton.tpType}"></td>
+                    <td th:text="${ton.tpPrice}"></td>
+                    <td style="width: 450px;;">
+                        <button class="btn btn-primary" style="width: 120px;"
+                                data-toggle="modal" data-target="#modify" th:attr="data-id=${ton.tpId}"
+                                @click="modifyTon">修改
+                        </button>
+                        <button class="btn btn-danger" style="width: 120px;">删除</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="modal fade" id="modify" data-backdrop="static" tabindex="-1" role="dialog"
+                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">修改吨价</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group" :model="mfTonprice">
+                                <label>类型</label>
+                                <input type="text" v-model="mfTonprice.tpType" class="form-control"
+                                       aria-describedby="helpId">
+                                <label>价格</label>
+                                <input type="text" v-model="mfTonprice.tpPrice" class="form-control"
+                                       aria-describedby="helpId">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消修改</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" @click="modifyTonSubmit">
+                                提交修改
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var ton = new Vue({
+                el: "#ton_div",
+                data() {
+                    return {
+                        mfTonprice: {
+                            tpId: "",
+                            tpType: "",
+                            tpPrice: ""
+                        }
+                    }
+                },
+                methods: {
+                    modifyTon(event) {
+                        //获取到的这个id,去数据库查出来,然后显示在上面
+                        //获取当前点击事件对象
+                        var el = event.currentTarget;
+                        //获取点击的id
+                        var tonId = $(el).data("id");
+                        $.ajax({
+                            url: "/mfTonprice/selectOne/" + tonId,
+                            type: "get",
+                            dataType: "json",
+                            success(msg) {
+                                console.log(msg);
+                                ton.mfTonprice.tpType = msg.tpType;
+                                ton.mfTonprice.tpPrice = msg.tpPrice;
+                                ton.mfTonprice.tpId = msg.tpId;
+                            }
+                        });
+                    },
+                    modifyTonSubmit() {
+                        //修改吨价的方法
+                        $.ajax({
+                            url: "/mfTonprice/update/",
+                            type: "post",
+                            data: JSON.stringify(this.mfTonprice),
+                            contentType: "application/json",
+                            dataType: "json",
+                            success(msg) {
+                                if (msg.code == "200") {
+                                    alert("修改成功");
+                                    location.reload();
+                                } else {
+                                    alert("修改失败");
+                                }
+                            }
+                        });
+                    }
+                },
+            });
+        </script>
+    </div>
+</div>
+</body>
+</html>

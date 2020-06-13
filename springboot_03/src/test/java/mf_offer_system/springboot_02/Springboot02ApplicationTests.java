@@ -1,0 +1,88 @@
+package mf_offer_system.springboot_02;
+
+import mf_offer_system.springboot_02.dao.MfWorkDao;
+import mf_offer_system.springboot_02.dao.MfWorkHbDao;
+import mf_offer_system.springboot_02.entity.MfOffer;
+import mf_offer_system.springboot_02.entity.MfWork;
+import mf_offer_system.springboot_02.service.MfOfferService;
+import mf_offer_system.springboot_02.service.MfTonpriceService;
+import mf_offer_system.springboot_02.service.OfferService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@SpringBootTest
+class Springboot02ApplicationTests {
+
+    @Autowired
+    MfTonpriceService mfTonpriceService;
+
+    @Autowired
+    private OfferService offerService;
+    @Autowired
+    private MfOfferService mfOfferService;
+    @Autowired
+    private MfWorkDao mfWorkDao;
+    @Autowired
+    private MfWorkHbDao mfWorkHbDao;
+
+    @Test
+    void testMfworkAccountByName() {
+        int aa = mfWorkDao.queryAllWorkCountsByName("aa");
+        List<MfWork> mfWorks = mfWorkDao.queryByPageByName(0, 10, "aa");
+        System.out.println("总条数" + aa + "\t" + "查询出来的数据" + mfWorks);
+    }
+
+    @Test
+    void testMfWorkAccount() {
+        int i = mfWorkDao.queryAllWorkCountsGroupByName();
+        List<MfWork> mfWorks = mfWorkHbDao.queryByPageGroupByName(0, 10);
+        System.out.println("总条数" + i + "\t" + "查询出来的数据" + mfWorks);
+    }
+
+    /**
+     * 测试纸张单价
+     */
+    @Test
+    void contextLoads() {
+        MfOffer mfOffer = new MfOffer();
+        mfOffer.setPaperIdCover(1);
+        mfOffer.setSizeId(7);
+        mfOffer.setOfferCoverGrammage(80);
+        double v = mfTonpriceService.countSinglePaper(mfOffer, 1);
+        System.out.println("计算出来的单价是" + v);
+    }
+
+    @Test
+    void testCoverCore() {
+        MfOffer mfOffer = new MfOffer();
+        mfOffer.setTypeId(1);
+        mfOffer.setOfferNumber(500);
+        mfOffer.setPaperIdCover(2);
+        mfOffer.setSizeId(3);
+        mfOffer.setOfferCoverGrammage(250);
+        mfOffer.setOfferCoverP(4);
+        mfOffer.setOfferCoreP(56);
+        mfOffer.setOfferCoreGrammage(157);
+        mfOffer.setPaperIdCore(2);
+        offerService.countPrice(mfOffer);
+        System.out.println(mfOffer);
+        System.out.println("内芯价格" + mfOffer.getOfferCorePrice() + "\t封面价格" + mfOffer.getOfferCoverPrive());
+    }
+
+    @Test
+    void testMfOffer() {
+        MfOffer mfOffer = mfOfferService.queryOfferById((long) 7);
+        System.out.println(mfOffer);
+    }
+
+    @Test
+    void testMfWork() {
+        MfWork work = mfWorkDao.queryDataByWorkId((long) 1);
+        System.out.println(work);
+    }
+
+}

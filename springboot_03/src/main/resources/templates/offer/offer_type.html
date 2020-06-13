@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>报价类型</title>
+</head>
+<body>
+<div th:fragment="type">
+    <ul class="nav justify-content-center" id="offer_type_nav">
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/offer/pictureAlbum/1}">彩色画册报价</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/offer/pictureAlbum/2}">黑白画册报价</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/offer/pictureAlbum/3}">彩色单页报价</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" th:href="@{/offer/pictureAlbum/4}">黑白单页报价</a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

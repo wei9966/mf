@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员界面</title>
+    <link rel="stylesheet" href="/static/css/common/admin_left_nav.css" th:href="@{/static/css/common/admin_left_nav.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1" th:insert="~{administrators/common/admin_left_nav :: adminLeftNav}">
+
+            </div>
+            <div class="col-11 mt-5">
+                  <h1>修改主页</h1>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

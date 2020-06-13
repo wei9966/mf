@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mf_offer_system.springboot_02.dao.MfRunningBillDao">
+
+    <resultMap type="mf_offer_system.springboot_02.entity.MfRunningBill" id="MfRunningBillMap">
+        <result property="billId" column="bill_id" jdbcType="INTEGER"/>
+        <result property="billTime" column="bill_time" jdbcType="TIMESTAMP"/>
+        <result property="billName" column="bill_name" jdbcType="VARCHAR"/>
+        <result property="billAbstract" column="bill_abstract" jdbcType="VARCHAR"/>
+        <result property="billMoney" column="bill_money" jdbcType="OTHER"/>
+        <result property="billType" column="bill_type" jdbcType="VARCHAR"/>
+        <result property="billMethod" column="bill_method" jdbcType="VARCHAR"/>
+        <result property="billRemarks" column="bill_remarks" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MfRunningBillMap">
+        select
+          bill_id, bill_time, bill_name, bill_abstract, bill_money, bill_type, bill_method, bill_remarks
+        from mf_offer.mf_running_bill
+        where bill_id = #{billId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MfRunningBillMap">
+        select
+          bill_id, bill_time, bill_name, bill_abstract, bill_money, bill_type, bill_method, bill_remarks
+        from mf_offer.mf_running_bill
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MfRunningBillMap">
+        select
+          bill_id, bill_time, bill_name, bill_abstract, bill_money, bill_type, bill_method, bill_remarks
+        from mf_offer.mf_running_bill
+        <where>
+            <if test="billId != null">
+                and bill_id = #{billId}
+            </if>
+            <if test="billTime != null">
+                and bill_time = #{billTime}
+            </if>
+            <if test="billName != null and billName != ''">
+                and bill_name = #{billName}
+            </if>
+            <if test="billAbstract != null and billAbstract != ''">
+                and bill_abstract = #{billAbstract}
+            </if>
+            <if test="billMoney != null">
+                and bill_money = #{billMoney}
+            </if>
+            <if test="billType != null and billType != ''">
+                and bill_type = #{billType}
+            </if>
+            <if test="billMethod != null and billMethod != ''">
+                and bill_method = #{billMethod}
+            </if>
+            <if test="billRemarks != null and billRemarks != ''">
+                and bill_remarks = #{billRemarks}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="billId" useGeneratedKeys="true">
+        insert into mf_offer.mf_running_bill(bill_time, bill_name, bill_abstract, bill_money, bill_type, bill_method, bill_remarks)
+        values (#{billTime}, #{billName}, #{billAbstract}, #{billMoney}, #{billType}, #{billMethod}, #{billRemarks})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mf_offer.mf_running_bill
+        <set>
+            <if test="billTime != null">
+                bill_time = #{billTime},
+            </if>
+            <if test="billName != null and billName != ''">
+                bill_name = #{billName},
+            </if>
+            <if test="billAbstract != null and billAbstract != ''">
+                bill_abstract = #{billAbstract},
+            </if>
+            <if test="billMoney != null">
+                bill_money = #{billMoney},
+            </if>
+            <if test="billType != null and billType != ''">
+                bill_type = #{billType},
+            </if>
+            <if test="billMethod != null and billMethod != ''">
+                bill_method = #{billMethod},
+            </if>
+            <if test="billRemarks != null and billRemarks != ''">
+                bill_remarks = #{billRemarks},
+            </if>
+        </set>
+        where bill_id = #{billId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mf_offer.mf_running_bill where bill_id = #{billId}
+    </delete>
+
+    <select id="queryAllCounts" resultType="integer">
+      select count(*) from mf_running_bill;
+    </select>
+
+</mapper>

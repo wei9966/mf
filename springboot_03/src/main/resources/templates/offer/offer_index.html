@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>报价主页</title>
+    <link rel="stylesheet" href="/static/css/common/offer/offer_type_nav.css"
+          th:href="@{/static/css/common/offer/offer_type_nav.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{../../static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{../../static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{../../static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{../../static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{../../static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{../../static/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="/static/js/moment.js" th:src="@{/static/js/moment.js}"></script>
+    <script src="/static/js/excel/excel.js" th:src="@{../../static/js/excel/excel.js}"></script>
+    <script src="/static/js/excel/xlsx.full.min.js" th:src="@{../../static/js/excel/xlsx.full.min.js}"></script>
+</head>
+<body>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav}"></div>
+        <div class="col-md-11 mt-5" id="offer_record">
+            <h1 align="center">报价主页</h1>
+            <div>
+                <button class="btn btn-success float-right"
+                        id="generate-excel" @click="exportExcel">导出当前页的excel
+                </button>
+                <button class="btn btn-danger float-right"
+                        id="delete-offers" @click="deleteOffers">批量删除
+                </button>
+            </div>
+            <div th:insert="~{offer/offer_type :: type}"></div>
+            <div style="border: 1px solid">
+                <el-table
+                        :data="offerRecords"
+                        border
+                        show-summary
+                        :summary-method="getSummaries"
+                        style="width: 100%;font-size: 18px;"
+                        height="650"
+                        ref="multipleTable"
+                        id="offerTable"
+                >
+                    <el-table-column
+                            type="selection"
+                            width="70"
+                            align="center">
+                    </el-table-column>
+
+                    <el-table-column
+                            type="index"
+                            :index="indexMethod"
+                            label="编号"
+                            width="70"
+                            sortable
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="offerCustomerName"
+                            label="客户名称"
+                            width="180"
+                            :filters="customerNames"
+                            :filter-method="filterHandler"
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="offerProductName"
+                            label="产品名称"
+                            width="180"
+                            :filters="productNames"
+                            :filter-method="filterHandler"
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="offerTime"
+                            label="报价日期"
+                            width="180" :formatter="dateFormat"
+                            sortable
+                            :filters="dateGroups"
+                            :filter-method="filterHandlerDate"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="offerNumber"
+                            label="数量"
+                            width="180"
+                            sortable
+                            :filters="offerNums"
+                            :filter-method="filterHandler"
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="offerTotalPrice"
+                            label="总价"
+                            width="180"
+                            sortable
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="offerProduceId"
+                            label="生产状态"
+                            width="180"
+                            :filters="[{ text: '未生产', value: '0' }, { text: '已生产', value: '1' }]"
+                            :filter-method="filterHandler"
+                            align="center"
+                    >
+                        <template slot-scope="scope">
+                            <el-tag
+                                    :type="scope.row.offerProduceId == '0' ? 'primary' : 'success'"
+                                    disable-transitions
+                                    v-if="scope.row.offerProduceId==0"
+                            >未生产
+                            </el-tag>
+                            <el-tag
+                                    :type="scope.row.offerProduceId == '0' ? 'primary' : 'success'"
+                                    disable-transitions
+                                    v-if="scope.row.offerProduceId==1"
+                            >已生产
+                            </el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column>
+                        <template slot="header" slot-scope="scope">
+                            <el-input
+                                    v-model="search"
+                                    size="mini"
+                                    placeholder="输入关键字搜索"/>
+                        </template>
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    @click="showOffer(scope.row)">查看
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                        background="true"
+                        layout="sizes,prev, pager, next,jumper"
+                        :total="totalPage" :page-size.sync="pageSize" :current-page="currentPage"
+                        @current-change="switchPage"
+                        :page-sizes="[10, 50, 100, 500]"
+                        @size-change="changeSize"
+                        style="margin-top:80px"
+                >
+                </el-pagination>
+            </div>
+            <script>
+                var record = new Vue({
+                    el: "#offer_record",
+                    data() {
+                        return {
+                            offerRecords: [],
+                            pageSize: "",
+                            currentPage: "",
+                            totalPage: null,
+                            search: "",
+                            customerNames: [],
+                            productNames: [],
+                            dateGroups: [],
+                            offerNums: []
+                        }
+                    },
+                    methods: {
+                        switchPage(page) {
+                            this.currentPage = page;
+                            this.getLimitData();
+                        },
+                        changeSize(size) {
+                            this.pageSize = size;
+                            this.customerNames = [];
+                            this.productNames = [];
+                            this.dateGroups = [];
+                            this.offerNums = [];
+                            this.getLimitData();
+                        },
+                        createFilter(data, names, container) {
+                            //进行过滤生成对象
+                            var repeat = new Array();
+                            for (var key in data) {
+                                var tempCust = {
+                                    text: data[key][names],
+                                    value: data[key][names]
+                                };
+                                if (repeat.find(obj => obj === data[key][names]) === undefined) {
+                                    repeat.push(data[key][names]);
+                                    container.push(tempCust);
+                                }
+                            }
+                        },
+                        getLimitData() {
+                            $.ajax({
+                                url: "/offer/all/list",
+                                type: "post",
+                                data: {"currentPage": this.currentPage, "pageSize": this.pageSize},
+                                dataType: "json",
+                                success(msg) {
+                                    record.totalPage = msg.totalCount;
+                                    record.currentPage = msg.currPage;
+                                    record.pageSize = msg.pageSize;
+                                    record.offerRecords = msg.list;
+                                    //生成customerName
+                                    record.createFilter(msg.list, "offerCustomerName", record.customerNames);
+                                    //生成produceName
+                                    record.createFilter(msg.list, "offerProductName", record.productNames);
+                                    //生成dateGroups
+                                    var repeat = new Array();
+                                    for (let listKey in msg.list) {
+                                        var dateTemp = {
+                                            text: moment(msg.list[listKey].offerTime).format("yyyy-MM"),
+                                            value: moment(msg.list[listKey].offerTime).format("yyyy-MM")
+                                        };
+                                        if (repeat.find(obj => obj === moment(msg.list[listKey].offerTime).format("yyyy-MM")) === undefined) {
+                                            repeat.push(moment(msg.list[listKey].offerTime).format("yyyy-MM"));
+                                            record.dateGroups.push(dateTemp);
+                                        }
+                                    }
+                                    //数量分组
+                                    record.createFilter(msg.list, "offerNumber", record.offerNums);
+                                },
+                                error() {
+                                    alert("调用失败");
+                                }
+                            });
+                        },
+                        dateFormat(row, column) {
+                            //日期格式转换
+                            var date = row[column.property];
+                            if (date == undefined) {
+                                return '';
+                            }
+                            return moment(date).format("YYYY-MM-DD HH:mm:ss");
+                        },
+                        showOffer(row) {
+                            //这个row包含了这整个对象
+                            console.log(row.offerId);
+                            location.href = `/offer/select/${row.offerId}`;
+                        },
+                        indexMethod(index) {
+                            //产生编号
+                            return index + 1;
+                        },
+                        filterHandler(value, row, column) {
+                            // console.log(value,column);
+                            const property = column['property'];
+                            return row[property] == value;
+                        },
+                        filterHandlerDate(value, row, column) {
+                            const property = column['property'];
+                            return moment(row[property]).format("yyyy-MM") == value;
+                        },
+                        getSummaries(param) {
+                            const {columns, data} = param;
+                            const sums = [];
+                            columns.forEach((column, index) => {
+                                    if (index === 0) {
+                                        sums[index] = '合计';
+                                        return;
+                                    }
+                                    if (index === 1) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 2) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 3) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 4) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 5) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 7) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    const values = data.map(item => Number(item[column.property]));
+                                    if (!values.every(value => isNaN(value))) {
+                                        sums[index] = values.reduce((prev, curr) => {
+                                            const value = Number(curr);
+                                            if (!isNaN(value)) {
+                                                return prev + curr;
+                                            } else {
+                                                return prev;
+                                            }
+                                        }, 0);
+                                        sums[index] += '元';
+                                    } else {
+                                        sums[index] = '';
+                                    }
+                                }
+                            );
+                            return sums;
+                        },
+                        exportExcel() {
+                            var wb = XLSX.utils.table_to_book(document.querySelector('#offerTable'))
+                            var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: true, type: 'array'})
+                            try {
+                                saveAs(new Blob([wbout], {type: 'application/octet-stream'}), 'offer'+moment(new Date()).format("YYYY-MM-DD hh:mm:ss") + '.xlsx')
+                            } catch (e) {
+                                if (typeof console !== 'undefined') console.log(e, wbout)
+                            }
+                            return wbout
+                        },
+                        deleteOffers() {
+                            let self = this;
+                            let deleteArr = self.$refs.multipleTable.selection;
+                            let offers = new Array();
+                            if (deleteArr.length > 0) {
+                                for (let i = 0; i < deleteArr.length; i++) {
+                                    if (deleteArr[i].offerProduceId == 0) {
+                                        offers.push(deleteArr[i].offerId);
+                                    }
+                                }
+                            }
+                            if (offers.length == 0) {
+                                record.warnInfo("要删除的工单有误,请重新选择");
+                            }
+                            $.ajax({
+                                url: "/offer/delete/offers",
+                                type: "post",
+                                data: JSON.stringify(offers),
+                                contentType: "application/json",
+                                dataType: "json",
+                                success(msg) {
+                                    if (msg.code == '200') {
+                                        record.successInfo("删除成功");
+                                    } else {
+                                        record.warnInfo("删除失败,请联系管理员");
+                                    }
+                                },
+                                error() {
+                                    record.warnInfo("调用失败,请联系管理员");
+                                }
+                            });
+                        }, warnInfo(data) {
+                            this.$message({
+                                message: `${data}`,
+                                type: "warn"
+                            });
+                        },
+                        successInfo(data) {
+                            this.$message({
+                                message: `${data}`,
+                                type: "success"
+                            });
+                        }
+                    },
+                    mounted() {
+                        this.getLimitData();
+                    },
+                })
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</body>
+</html>

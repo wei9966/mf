@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>对账主页</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="/static/js/moment.js" th:src="@{/static/js/moment.js}"></script>
+    <script src="/static/js/excel/excel.js" th:src="@{../../static/js/excel/excel.js}"></script>
+    <script src="/static/js/excel/xlsx.full.min.js" th:src="@{../../static/js/excel/xlsx.full.min.js}"></script>
+</head>
+<body>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav}"></div>
+        <div class="col-md-11 mt-5" id="account_div">
+            <h1 align="center">对账主页</h1>
+            <el-table ref="singleTable"
+                      :data="accounts"
+                      style="width: 100%;font-size: 19px;align-content: center;"
+                      height="700"
+                      id="account_table"
+                      v-if="accountFlag"
+            >
+                <el-table-column
+                        type="index"
+                        :index="indexMethod"
+                        label="编号"
+                        width="200"
+                        align="center"
+                        sortable
+                ></el-table-column>
+                <el-table-column
+                        prop="workCustomerName"
+                        label="客户名称"
+                        width="600"
+                        align="center"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="workTotalPrice"
+                        label="总价"
+                        width="400"
+                        align="center"
+                        sortable
+                >
+                </el-table-column>
+                <el-table-column
+                        label="操作"
+                        width="500">
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                @click="showOffer(scope.row)">
+                            <span v-if="scope.row.workProductName==null">查看具体明细</span>
+                            <span v-else="scope.row.workProductName!=null">{{workProductName}}</span>
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-table
+                    :data="accountsNames"
+                    border
+                    show-summary
+                    :summary-method="getSummaries"
+                    style="width: 100%;font-size: 19px;align-content: center;"
+                    height="680"
+                    id="account_table"
+                    v-if="accountFlag==false"
+            >
+                <el-table-column
+                        type="index"
+                        :index="indexMethod"
+                        label="编号"
+                        width="122"
+                        align="center"
+                        sortable
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="workTime"
+                        label="日期"
+                        :formatter="dateFormat"
+                        width="122"
+                        sortable
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="workCustomerName"
+                        label="客户名称"
+                        width="122"
+                        align="center"
+                >
+                </el-table-column>
+                <el-table-column
+                        label="产品名称"
+                        width="122"
+                        align="center"
+                >
+                    <template slot-scope="scope">
+                        <span v-if="scope.row.workProductName==null">查看具体明细</span>
+                        <span v-else="scope.row.workProductName!=null">{{scope.row.workProductName}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="workCoverGrammage"
+                        label="封面纸张"
+                        width="122"
+                >
+                    <template slot-scope="scope" v-if="scope.row.workCoverGrammage!=null">
+                        {{scope.row.workCoverGrammage}}克{{scope.row.coverPaperType}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="workCoreGrammage,coverPaperId"
+                        label="内芯纸张"
+                        width="122"
+                >
+                    <template slot-scope="scope">
+                        {{scope.row.workCoreGrammage}}克{{scope.row.corePaperType}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="workNumber"
+                        label="成品数量"
+                        width="122"
+                        align="center"
+                        sortable
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="productSizeType"
+                        label="成品尺寸"
+                        width="122"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="coverColorType,coreColorType"
+                        label="印刷颜色"
+                        width="122"
+                >
+                    <template slot-scope="scope">
+                            <span v-if="scope.row.coverColorType==null">
+                                内芯-{{scope.row.coreColorType}}
+                            </span>
+                        <span v-else-if="scope.row.insetColorType==null">
+                                封面-{{scope.row.coverColorType}}
+                                <br>
+                                内芯-{{scope.row.coreColorType}}
+                            </span>
+                        <span v-else>
+                                 封面-{{scope.row.coverColorType}}
+                                <br>
+                                内芯-{{scope.row.coreColorType}}
+                                <br>
+                                插页-{{scope.row.insetColorType}}
+                            </span>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                        prop="workPostProcessing"
+                        label="加工要求"
+                        width="122"
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="workCoverPrice"
+                        label="封面价格"
+                        width="122"
+                        align="center"
+                        sortable
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="workTotalPrice"
+                        label="总价"
+                        width="122"
+                        align="center"
+                        sortable
+                >
+                </el-table-column>
+                <el-table-column
+                        prop="workRemarks"
+                        label="备注"
+                        width="122"
+                >
+                </el-table-column>
+                <el-table-column
+                        label="操作"
+                        width="122">
+                    <template slot-scope="scope">
+                        <el-button
+                                size="mini"
+                                @click="showSingleWork(scope.row)">查看工单明细
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div>
+                <button class="btn btn-success" v-if="accountFlag==false" @click="returnIndex">返回上一层</button>
+
+                <button class="btn btn-success float-right" v-if="accountFlag==false" id="generate-excel"
+                        @click="exportExcel">
+                    导出当前页excel
+                </button>
+            </div>
+            <el-pagination
+                    background="true"
+                    layout="sizes,prev, pager, next,jumper"
+                    :total="totalPage" :page-size.sync="pageSize" :current-page="currentPage"
+                    @current-change="switchPage"
+                    :page-sizes="[10, 50, 100, 500]"
+                    @size-change="changeSize"
+            >
+            </el-pagination>
+        </div>
+        <script>
+            var accountVue = new Vue({
+                el: "#account_div",
+                data() {
+                    return {
+                        accounts: [],
+                        accountsNames: [],
+                        totalPage: "",
+                        pageSize: "",
+                        currentPage: "",
+                        accountFlag: true,
+                        customerName: ""
+                    }
+                },
+                methods: {
+                    getAllAccounts() {
+                        $.ajax({
+                            url: "/mfWorkAccount/all/list",
+                            type: "get",
+                            dataType: "json",
+                            success(data) {
+                                accountVue.accounts = data.list;
+                                accountVue.totalPage = data.totalCount;
+                                accountVue.currentPage = data.currPage;
+                                accountVue.pageSize = data.pageSize;
+                            },
+                            error() {
+                                alert("调用失败");
+                            }
+                        });
+                    },
+                    getSingleAccounts() {
+                        $.ajax({
+                            url: "/mfWorkAccount/single/list",
+                            type: "post",
+                            data: {
+                                "currentPage": this.currentPage,
+                                "pageSize": this.pageSize,
+                                "customerName": this.customerName
+                            },
+                            dataType: "json",
+                            success(msg) {
+                                accountVue.totalPage = msg.totalCount;
+                                accountVue.currentPage = msg.currPage;
+                                accountVue.pageSize = msg.pageSize;
+                                accountVue.accountsNames = msg.list;
+                            },
+                            error() {
+                                alert("调用失败");
+                            }
+                        });
+                    },
+                    indexMethod(index) {
+                        //产生编号
+                        return index + 1;
+                    }, showOffer(data) {
+                        this.totalPage = "";
+                        this.currentPage = "";
+                        this.pageSize = "";
+                        this.customerName = data.workCustomerName;
+                        this.getSingleAccounts();
+                        this.accountFlag = false;
+                    }, switchPage() {
+                        if (this.accountFlag) {
+
+                        } else {
+
+                        }
+                    }, changeSize() {
+                        if (this.accountFlag) {
+
+                        } else {
+
+                        }
+                    }, showSingleWork(data) {
+
+                    },
+                    getSummaries(param) {
+                        const {columns, data} = param;
+                        const sums = [];
+                        columns.forEach((column, index) => {
+                                if (index === 0) {
+                                    sums[index] = '合计';
+                                    return;
+                                }
+                                if (index === 1) {
+                                    sums[index] = '';
+                                    return;
+                                }
+                                if (index === 6) {
+                                    sums[index] = '';
+                                    return;
+                                }
+                                if (index === 4) {
+                                    sums[index] = '';
+                                    return;
+                                }
+                                if (index === 9) {
+                                    sums[index] = '';
+                                    return;
+                                }
+                                if (index === 12) {
+                                    sums[index] = '';
+                                    return;
+                                }
+                                const values = data.map(item => Number(item[column.property]));
+                                if (!values.every(value => isNaN(value))) {
+                                    sums[index] = values.reduce((prev, curr) => {
+                                        const value = Number(curr);
+                                        if (!isNaN(value)) {
+                                            return prev + curr;
+                                        } else {
+                                            return prev;
+                                        }
+                                    }, 0);
+                                    sums[index] += '元';
+                                } else {
+                                    sums[index] = '';
+                                }
+                            }
+                        );
+                        return sums;
+                    },
+                    dateFormat(row, column) {
+                        //日期格式转换
+                        var date = row[column.property];
+                        if (date == undefined) {
+                            return '';
+                        }
+                        return moment(date).format("YYYY-MM-DD");
+                    }, exportExcel() {
+                        var wb = XLSX.utils.table_to_book(document.querySelector('#account_table'))
+                        var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: true, type: 'array'})
+                        try {
+                            saveAs(new Blob([wbout], {type: 'application/octet-stream'}), moment(new Date()).format("YYYY-MM-DD") + '.xlsx')
+                        } catch (e) {
+                            if (typeof console !== 'undefined') console.log(e, wbout)
+                        }
+                        return wbout
+                    }, returnIndex() {
+                        this.totalPage = "";
+                        this.currentPage = "";
+                        this.pageSize = "";
+                        this.getAllAccounts();
+                        this.accountFlag = true;
+                    }
+
+
+                },
+                mounted() {
+                    this.getAllAccounts();
+                }
+            });
+        </script>
+    </div>
+</div>
+</body>
+</body>
+</html>

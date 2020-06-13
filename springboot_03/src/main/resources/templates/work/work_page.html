@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>工单生产页面</title>
+    <link rel="stylesheet" href="/static/css/common/offer/offer_picture.css"
+          th:href="@{/static/css/common/offer/offer_picture.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="/static/js/moment.js" th:src="@{/static/js/moment.js}"></script>
+</head>
+<style>
+    #workTable th, #workTable td {
+        text-align: center;
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav} "></div>
+        <div class="col-md-11 mt-5">
+            <h2 align="center" id="offerTitle" th:attr="data-offerid=${offerId}">明发印刷厂生产工单</h2>
+            <table border="1" class="t1" cellpadding="5" cellspacing="0" align="center" id="workTable"
+                   style="position:relative;"
+                   :model="work">
+                <tr>
+                    <th>开单日期</th>
+                    <td colspan="4">{{work.workTime}}</td>
+                    <th>客户名称</th>
+                    <td colspan="4">{{work.workCustomerName}}</td>
+                </tr>
+                <tr>
+                    <th rowspan="2">常规信息</th>
+                    <th>印刷名称</th>
+                    <td colspan="3">
+                        {{work.workProductName}}
+                    </td>
+                    <th>成品数量</th>
+                    <td colspan="3">
+                        {{work.workNumber}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        接单日期
+                    </th>
+                    <td colspan="3">
+                        <div class="block">
+                            <el-date-picker
+                                    v-model="work.workOfferTime"
+                                    type="date"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </div>
+                    </td>
+                    <th>交货日期</th>
+                    <td colspan="3">
+                        <div class="block">
+                            <el-date-picker
+                                    v-model="work.workDeliveryTime"
+                                    type="date"
+                                    placeholder="选择日期">
+                            </el-date-picker>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th rowspan="5">印刷工艺</th>
+                    <th>印刷机台</th>
+                    <td colspan="2">
+                        <!--mfMachines-->
+                        <select v-model="work.machineId">
+                            <option th:each="machine:${mfMachines}" th:value="${machine.machineId}"
+                                    th:text="${machine.machineType}"></option>
+                        </select>
+                    </td>
+                    <th>产品尺寸</th>
+                    <td colspan="2">
+                        {{work.productSizeType}}
+                    </td>
+                    <th>拼板尺寸</th>
+                    <td>
+                        <select v-model="work.paneSizeId">
+                            <option th:each="collage:${mfCollages}" th:value="${collage.collageId}"
+                                    th:text="${collage.collageType}"></option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th>印刷信息</th>
+                    <th>纸张</th>
+                    <th>开别</th>
+                    <th>正数</th>
+                    <th>放数</th>
+                    <th>合全开数</th>
+                    <th>印刷墨色</th>
+                    <th>印版数量</th>
+                </tr>
+                <tr>
+                    <th>封面</th>
+                    <td>
+                        {{work.workCoverGrammage}}
+                        克
+                        {{work.coverPaperType}}
+                    </td>
+                    <td>
+                        {{work.workCoverLeave}}
+                    </td>
+                    <td>
+                        {{work.workNumber}}
+                        *
+                        {{work.coverPostsNumber}}
+                    </td>
+                    <td>
+                        {{work.workCoverPlayNumber}}
+                        *
+                        {{work.coverPostsNumber}}
+                    </td>
+                    <td>
+                        {{work.workCoverAlloysNumber}}
+                    </td>
+                    <td>
+                        {{work.coverColorType}}
+                    </td>
+                    <td>
+                        {{work.workCoverPlateNumber}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>内芯</th>
+                    <td>
+                        {{work.workCoreGrammage}}
+                        克
+                        {{work.corePaperType}}
+                    </td>
+                    <td>
+                        {{work.workCoreLeave}}
+                    </td>
+                    <td>
+                        {{work.workNumber}}
+                        *
+                        {{work.corePostsNumber}}
+                    </td>
+                    <td>
+                        {{work.workCorePlayNumber}}
+                        *
+                        {{work.corePostsNumber}}
+                    </td>
+                    <td>
+                        {{work.workCoreAlloysNumber}}
+                    </td>
+                    <td>
+                        {{work.coreColorType}}
+                    </td>
+                    <td>
+                        {{work.workCorePlateNumber}}
+                    </td>
+                </tr>
+                <tr v-if="work.workInsetGrammage==null">
+                    <th>插页</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr v-if="work.workInsetGrammage!=null">
+                    <th>插页</th>
+                    <td>
+                        {{work.workInsetGrammage}}
+                        克
+                        {{work.insetPaperType}}
+                    </td>
+                    <td>
+                        {{work.workInsetLeave}}
+                    </td>
+                    <td>
+                        {{work.workNumber}}
+                        *
+                        {{work.insetPostsNumber}}
+                    </td>
+                    <td>
+                        {{work.workInsetPlayNumber}}
+                        *
+                        {{work.insetPostsNumber}}
+                    </td>
+                    <td>
+                        {{work.workInsetAlloysNumber}}
+                    </td>
+                    <td>
+                        {{work.insetColorType}}
+                    </td>
+                    <td>
+                        {{work.workInsetPlateNumber}}
+                    </td>
+                </tr>
+                <tr>
+                    <th>备注</th>
+                    <td colspan="8">
+                        <el-input v-model="work.workRemarks" placeholder="请输入需要备注的内容"></el-input>
+                    </td>
+                </tr>
+                <tr>
+                    <th>后加工</th>
+                    <td colspan="8">
+                        {{work.workPostProcessing}}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9">
+                        <el-button slot="reference" @click="produceWork">生产</el-button>
+
+                    </td>
+                </tr>
+            </table>
+            <script>
+                var work = new Vue({
+                    el: "#workTable",
+                    data() {
+                        return {
+                            work: {}
+                        }
+                    }, methods: {
+                        getWorkInfo() {
+                            var offerId = $("#offerTitle").data("offerid");
+                            //请求地址
+                            $.ajax({
+                                url: `/mfWork/getInitWork/${offerId}`,
+                                type: "post",
+                                dataType: "json",
+                                success(msg) {
+                                    console.log(msg);
+                                    work.work = msg;
+                                    work.work.workTime = moment(work.work.workTime).format("yyyy-MM-DD");
+                                },
+                                error() {
+                                    alert("调用失败了");
+                                }
+                            });
+                        },
+                        produceWork() {
+                            //    /mfWork/produce
+                            if (this.work.machineId == null || this.work.workDeliveryTime == null || this.work.workOfferTime == null || this.work.paneSizeId == null) {
+                                this.$message({
+                                    message: "请填写完整的信息",
+                                    type: "error"
+                                });
+                                return;
+                            }
+                            var offerId = $("#offerTitle").data("offerid");
+                            $.ajax({
+                                url: `/mfWork/produce/${offerId}`, type: "post", data: JSON.stringify(this.work),
+                                contentType: "application/json",
+                                dataType: "json",
+                                success(data) {
+                                    if (data.code == "200") {
+                                        if (data.msg == "添加成功") {
+                                            location.href = `/mfWork/print/produce/${data.data.workId}`;
+                                        } else {
+                                            work.successInfo("此工单已经生产过了哦!");
+                                        }
+                                    } else {
+                                        alert("该工单已生产，请勿重复生产");
+                                    }
+                                }
+                            });
+                        },
+                        successInfo(data) {
+                            this.$message({
+                                message: `${data}`,
+                                type: "warning"
+                            });
+                        }
+                    },
+                    mounted() {
+                        this.getWorkInfo();
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

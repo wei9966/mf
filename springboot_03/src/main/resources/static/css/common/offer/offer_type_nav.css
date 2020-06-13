@@ -1,0 +1,11 @@
+#offer_type_nav{
+    margin-top: 25px;
+}
+#offer_type_nav a{
+    font-size: 25px;
+    color: black;
+}
+#offer_type_nav a:hover{
+    font-size: 25px;
+    color: red;
+}

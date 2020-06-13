@@ -1,0 +1,20 @@
+server:
+  port: 18888
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    username: root
+    password: 996649855
+    url: jdbc:mysql://localhost:3306/mf_offer?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=GMT%2B8
+  thymeleaf:
+    cache: false
+    mode: HTML
+    template-resolver-order: 1
+mybatis:
+  type-aliases-package: mf_offer_system.springboot_02.entity
+  mapper-locations: classpath:/mapper/**
+logging:
+  level:
+    mf_offer_system:
+      springboot_02: debug

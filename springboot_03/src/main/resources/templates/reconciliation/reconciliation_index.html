@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>流水主页</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="/static/js/moment.js" th:src="@{/static/js/moment.js}"></script>
+    <script src="/static/js/excel/excel.js" th:src="@{../../static/js/excel/excel.js}"></script>
+    <script src="/static/js/excel/xlsx.full.min.js" th:src="@{../../static/js/excel/xlsx.full.min.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav}"></div>
+        <div class="col-md-11 mt-5" id="offer_reconciliation">
+            <h1 align="center">流水主页</h1>
+            <div>
+                <button class="btn btn-success float-right"
+                        id="generate-excel" @click="exportExcel">导出当前页的excel
+                </button>
+            </div>
+            <div style="height: 40px;">
+                <button class="btn btn-info float-right" style="width: 150px;"
+                        data-toggle="modal" data-target="#expenditure">支
+                </button>
+                <button class="btn btn-success float-right" style="width: 150px;"
+                        data-toggle="modal" data-target="#incomeBox">收
+                </button>
+            </div>
+            <div style="border: 1px solid">
+                <el-table
+                        :data="offerReconciliation"
+                        border
+                        show-summary
+                        :summary-method="getSummaries"
+                        style="width: 100%;font-size: 18px;"
+                        height="700"
+                        id="reconciliation_table"
+                >
+                    <el-table-column
+                            type="index"
+                            :index="indexMethod"
+                            label="编号"
+                            width="80"
+                            sortable
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="billTime"
+                            label="记录时间"
+                            :formatter="dateFormat"
+                            width="188"
+                            align="center"
+                            :filters="dateGroups"
+                            :filter-method="filterHandlerDate"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="billName"
+                            label="客户名称"
+                            width="188"
+                            align="center"
+                            :filters="nameGroups"
+                            :filter-method="filterHandlerDate"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="billAbstract"
+                            label="摘要"
+                            width="500"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="billMoney"
+                            label="金额"
+                            width="100"
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="billType"
+                            label="收支类型"
+                            width="100"
+                            align="center"
+                            :filters="billTypes"
+                            :filter-method="filterHandler"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="billMethod"
+                            label="收支方式"
+                            width="180"
+                            align="center"
+                            :filters="billMethods"
+                            :filter-method="filterHandler"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="billRemarks"
+                            label="备注"
+                            width="180"
+                            align="center"
+                    >
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    data-toggle="modal" data-target="#updateBox"
+                                    @click="updateBill(scope.row)">修改
+                            </el-button>
+                            <el-button
+                                    size="mini"
+                                    @click="deleteBill(scope.row)">删除
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                        background="true"
+                        layout="sizes,prev, pager, next,jumper"
+                        :total="totalPage" :page-size.sync="pageSize" :current-page="currentPage"
+                        @current-change="switchPage"
+                        :page-sizes="[10, 50, 100, 500]"
+                        @size-change="changeSize"
+                        style="margin-top:50px"
+                >
+                </el-pagination>
+
+                <div class="modal fade" id="incomeBox" data-backdrop="static" tabindex="-1" role="dialog"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="incomeBoxLabel">记录收入</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" :model="bill">
+                                <label class="mr-3">时间</label>
+                                <div class="block">
+                                    <el-date-picker
+                                            v-model="bill.billTime"
+                                            type="datetime"
+                                            placeholder="选择日期">
+                                    </el-date-picker>
+                                </div>
+                                <br><br>
+                                <label class="mr-3">姓名</label>
+                                <input type="text" v-model="bill.billName"><br><br>
+                                <label class="mr-3">摘要</label>
+                                <input type="text" v-model="bill.billAbstract"><br><br>
+                                <label class="mr-3">金额</label>
+                                <input type="text" v-model="bill.billMoney"><br><br>
+                                <label class="mr-3">付款方式</label>
+                                <input type="text" v-model="bill.billMethod"><br><br>
+                                <label class="mr-3">备注</label>
+                                <input type="text" v-model="bill.billRemarks"><br><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">关闭
+                                </button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                        @click="insertBill(1)">提交
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="expenditure" data-backdrop="static" tabindex="-1" role="dialog"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="expenditureLabel">记录支出</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <label class="mr-3">时间</label>
+                                <!--<input type="text" v-model="bill.billTime">-->
+                                <div class="block">
+                                    <el-date-picker
+                                            v-model="bill.billTime"
+                                            type="datetime"
+                                            placeholder="选择日期">
+                                    </el-date-picker>
+                                </div>
+                                <br><br>
+                                <label class="mr-3">姓名</label>
+                                <input type="text" v-model="bill.billName"><br><br>
+                                <label class="mr-3">摘要</label>
+                                <input type="text" v-model="bill.billAbstract"><br><br>
+                                <label class="mr-3">金额</label>
+                                <input type="text" v-model="bill.billMoney"><br><br>
+                                <label class="mr-3">付款方式</label>
+                                <input type="text" v-model="bill.billMethod"><br><br>
+                                <label class="mr-3">备注</label>
+                                <input type="text" v-model="bill.billRemarks"><br><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">关闭
+                                </button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                        @click="insertBill(2)">提交
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="updateBox" data-backdrop="static" tabindex="-1" role="dialog"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="updateBoxLabel">修改流水记录</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <label class="mr-3">时间</label>
+                                <!--<input type="text" v-model="bill.billTime">-->
+                                <div class="block">
+                                    <el-date-picker
+                                            v-model="bill.billTime"
+                                            type="datetime"
+                                            placeholder="选择日期">
+                                    </el-date-picker>
+                                </div>
+                                <br><br>
+                                <label class="mr-3">姓名</label>
+                                <input type="text" v-model="bill.billName"><br><br>
+                                <label class="mr-3">摘要</label>
+                                <input type="text" v-model="bill.billAbstract"><br><br>
+                                <label class="mr-3">金额</label>
+                                <input type="text" v-model="bill.billMoney"><br><br>
+                                <label class="mr-3">付款方式</label>
+                                <input type="text" v-model="bill.billMethod"><br><br>
+                                <label class="mr-3">备注</label>
+                                <input type="text" v-model="bill.billRemarks"><br><br>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @click="close">关闭
+                                </button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                        @click="updateBillSubmit">提交
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                var reconciliationVue = new Vue({
+                    el: "#offer_reconciliation",
+                    data() {
+                        return {
+                            offerReconciliation: [],
+                            pageSize: "",
+                            currentPage: "",
+                            totalPage: null,
+                            billMethods: [],
+                            billTypes: [],
+                            dateGroups: [],
+                            nameGroups: [],
+                            bill: {
+                                billTime: "",
+                                billAbstract: "",
+                                billMoney: "",
+                                billType: "",
+                                billMethod: "",
+                                billRemarks: "",
+                                billName: ""
+                            }
+                        }
+                    }, methods: {
+                        indexMethod(index) {
+                            //产生编号
+                            return index + 1;
+                        },
+                        dateFormat(row, column) {
+                            //日期格式转换
+                            var date = row[column.property];
+                            if (date == undefined) {
+                                return '';
+                            }
+                            return moment(date).format("YYYY-MM-DD HH:mm:ss");
+                        },
+                        getLimitData() {
+                            $.ajax({
+                                url: "/bill/all/list",
+                                type: "post",
+                                data: {"currentPage": this.currentPage, "pageSize": this.pageSize},
+                                dataType: "json",
+                                success(msg) {
+                                    reconciliationVue.totalPage = msg.totalCount;
+                                    reconciliationVue.currentPage = msg.currPage;
+                                    reconciliationVue.pageSize = msg.pageSize;
+                                    reconciliationVue.offerReconciliation = msg.list;
+                                    reconciliationVue.createFilter(msg.list, "billMethod", reconciliationVue.billMethods)
+                                    reconciliationVue.createFilter(msg.list, "billType", reconciliationVue.billTypes)
+                                    reconciliationVue.createFilter(msg.list, "billName", reconciliationVue.nameGroups)
+                                    //生成dateGroups
+                                    var repeat = new Array();
+                                    for (let listKey in msg.list) {
+                                        var dateTemp = {
+                                            text: moment(msg.list[listKey].billTime).format("yyyy-MM"),
+                                            value: moment(msg.list[listKey].billTime).format("yyyy-MM")
+                                        };
+                                        if (repeat.find(obj => obj === moment(msg.list[listKey].billTime).format("yyyy-MM")) === undefined) {
+                                            repeat.push(moment(msg.list[listKey].billTime).format("yyyy-MM"));
+                                            reconciliationVue.dateGroups.push(dateTemp);
+                                        }
+                                    }
+                                },
+                                error() {
+                                    alert("调用失败");
+                                }
+                            });
+                        },
+                        switchPage(page) {
+                            this.currentPage = page;
+                            this.getLimitData();
+                        },
+                        changeSize(size) {
+                            this.pageSize = size;
+                            this.billMethods = [];
+                            this.billTypes = [];
+                            this.dateGroups = [];
+                            this.nameGroups = [];
+                            this.getLimitData();
+                        },
+                        close() {
+                            this.bill.billTime = "";
+                            this.bill.billAbstract = "";
+                            this.bill.billMoney = "";
+                            this.bill.billName = "";
+                            this.bill.billType = "";
+                            this.bill.billMethod = "";
+                            this.bill.billRemarks = "";
+                        },
+                        insertBill(type) {
+                            if (type == 1) {
+                                this.bill.billType = "收入";
+                            } else {
+                                this.bill.billType = "支出";
+                            }
+                            $.ajax({
+                                url: "/bill/insert",
+                                type: "post",
+                                data: JSON.stringify(this.bill),
+                                contentType: "application/json",
+                                dataType: "json",
+                                success(msg) {
+                                    if (msg.code == 200) {
+                                        reconciliationVue.successInfo(msg.msg);
+                                        reconciliationVue.getLimitData();
+                                        reconciliationVue.close();
+                                    }
+                                },
+                                error() {
+                                    reconciliationVue.warnInfo("服务器错误，请联系系统管理员");
+                                }
+                            });
+                        },
+                        successInfo(data) {
+                            this.$message({
+                                message: `${data}`,
+                                type: "success"
+                            });
+                        },
+                        warnInfo(data) {
+                            this.$message({
+                                message: `${data}`,
+                                type: "warning"
+                            });
+                        },
+                        createFilter(data, names, container) {
+                            //进行过滤生成对象
+                            var repeat = new Array();
+                            for (var key in data) {
+                                var tempCust = {
+                                    text: data[key][names],
+                                    value: data[key][names]
+                                };
+                                if (repeat.find(obj => obj === data[key][names]) === undefined) {
+                                    repeat.push(data[key][names]);
+                                    container.push(tempCust);
+                                }
+                            }
+                        },
+                        filterHandler(value, row, column) {
+                            // console.log(value,column);
+                            const property = column['property'];
+                            return row[property] == value;
+                        },
+                        filterHandlerDate(value, row, column) {
+                            const property = column['property'];
+                            return moment(row[property]).format("yyyy-MM") == value;
+                        },
+                        getSummaries(param) {
+                            const {columns, data} = param;
+                            const sums = [];
+                            //延时执行   要不然会一直刷新
+
+                            columns.forEach((column, index) => {
+                                    if (index === 0) {
+                                        sums[index] = '合计';
+                                        return;
+                                    }
+                                    if (index === 1) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    const values = data.map(item => Number(item[column.property]));
+                                    if (!values.every(value => isNaN(value))) {
+                                        sums[index] = values.reduce((prev, curr) => {
+                                            const value = Number(curr);
+                                            if (!isNaN(value)) {
+                                                return prev + curr;
+                                            } else {
+                                                return prev;
+                                            }
+                                        }, 0);
+                                        sums[index] += '元';
+                                    } else {
+                                        sums[index] = '';
+                                    }
+                                }
+                            );
+                            return sums;
+                        },
+                        exportExcel() {
+                            var wb = XLSX.utils.table_to_book(document.querySelector('#reconciliation_table'))
+                            var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: true, type: 'array'})
+                            try {
+                                saveAs(new Blob([wbout], {type: 'application/octet-stream'}), 'bill'+moment(new Date()).format("YYYY-MM-DD hh:mm:ss") + '.xlsx')
+                            } catch (e) {
+                                if (typeof console !== 'undefined') console.log(e, wbout)
+                            }
+                            return wbout
+                        },
+                        updateBill(data) {
+                            this.bill = data;
+                        },
+                        updateBillSubmit() {
+                            $.ajax({
+                                url: `/bill/update`,
+                                type: "post",
+                                data: JSON.stringify(this.bill),
+                                contentType: "application/json",
+                                dataType: "json",
+                                success(msg) {
+                                    if (msg.code == '200') {
+                                        reconciliationVue.successInfo("修改成功");
+                                        reconciliationVue.getLimitData();
+                                        reconciliationVue.close();
+                                    } else {
+                                        reconciliationVue.warnInfo("删除失败,请联系管理员");
+                                    }
+                                }, error() {
+                                    reconciliationVue.warnInfo("调用失败");
+                                }
+                            });
+                        },
+                        deleteBill(data) {
+                            //billId
+                            reconciliationVue.$confirm("是否删除记录", '删除', {
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                type: 'warning'
+                            }).then(() => {
+                                $.ajax({
+                                    url: `/bill/delete/${data.billId}`,
+                                    type: "get",
+                                    dataType: "json",
+                                    success(msg) {
+                                        if (msg.code == '200') {
+                                            reconciliationVue.successInfo("删除成功");
+                                            reconciliationVue.getLimitData();
+                                        } else {
+                                            reconciliationVue.warnInfo("删除失败,请联系管理员");
+                                        }
+                                    }, error() {
+                                        reconciliationVue.warnInfo("调用失败");
+                                    }
+                                });
+                            }).catch(() => {
+
+                            });
+                        }
+                    }, mounted() {
+                        this.getLimitData();
+                    },
+                });
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

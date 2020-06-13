@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mf_offer_system.springboot_02.dao.MfPaperDao">
+
+    <resultMap type="mf_offer_system.springboot_02.entity.MfPaper" id="MfPaperMap">
+        <result property="paperId" column="paper_id" jdbcType="INTEGER"/>
+        <result property="paperType" column="paper_type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MfPaperMap">
+        select
+          paper_id, paper_type
+        from mf_offer.mf_paper
+        where paper_id = #{paperId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MfPaperMap">
+        select
+          paper_id, paper_type
+        from mf_offer.mf_paper
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MfPaperMap">
+        select
+          paper_id, paper_type
+        from mf_offer.mf_paper
+        <where>
+            <if test="paperId != null">
+                and paper_id = #{paperId}
+            </if>
+            <if test="paperType != null and paperType != ''">
+                and paper_type = #{paperType}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="paperId" useGeneratedKeys="true">
+        insert into mf_offer.mf_paper(paper_type)
+        values (#{paperType})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mf_offer.mf_paper
+        <set>
+            <if test="paperType != null and paperType != ''">
+                paper_type = #{paperType},
+            </if>
+        </set>
+        where paper_id = #{paperId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mf_offer.mf_paper where paper_id = #{paperId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>黑白单页报价</title>
+    <link rel="stylesheet" href="/static/css/common/offer/offer_picture.css"
+          th:href="@{/static/css/common/offer/offer_picture.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{/static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{/static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{/static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{/static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{/static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{/static/js/bootstrap.bundle.js}"></script>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav}"></div>
+        <div class="col-md-11 mt-5">
+            <h1 align="center">黑白单页报价</h1><br><br>
+            <div class="form-group" id="offer_div" :model="offer">
+                <table class="t1" border="1" cellpadding="1" cellspacing="0"
+                       style="position: relative;">
+                    <tr>
+                        <th>日期</th>
+                        <th>客户名称</th>
+                        <th>文件名称</th>
+                        <th>成品尺寸</th>
+                        <th>成品数量</th>
+                        <th>克数</th>
+                        <th>纸型</th>
+                        <th>P数</th>
+                        <th>墨色</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><input type="text" id="hcName" v-model="offer.offerCustomerName">
+
+                        </td>
+                        <td><input type="text" id="hpName" v-model="offer.offerProductName"></td>
+                        <td><select name="hcpSize" id="hcpSize" v-model="offer.sizeId">
+                            <option th:each="paper:${mfPapers}" th:value="${paper.paperId}"
+                                    th:text="${paper.paperType}"></option>
+                        </select></td>
+                        <td><input type="text" id="hcount" v-model="offer.offerNumber" required pattern="\d{0,6}"></td>
+                        <td><input type="text" id="hnxKs" v-model="offer.offerCoreGrammage" required pattern="\d{0,6}">
+                        </td>
+                        <td>
+                            <select name="fmType" id="hnxType" v-model="offer.paperIdCore">
+                                <option value=""></option>
+                                <option th:each="ton:${mfTonprices}" th:value="${ton.tpId}" th:text="${ton.tpType}"
+                                        value=""></option>
+                            </select>
+                        </td>
+                        <td><input type="text" id="hnxPs" v-model="offer.offerCoreP" required pattern="\d{0,6}"></td>
+                        <td>
+                            <select name="nxMs" id="hnxMs" v-model="offer.colorIdCore" value="2">
+                                <option th:each="color:${mfColors}" th:text="${color.colorType}"
+                                        th:value="${color.colorId}">K
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <table class="t1" border="1" style="margin-top: 25px;" cellspacing="0"
+                       cellpadding="1">
+                    <tr>
+                        <th>复膜</th>
+                        <th>装订方式</th>
+                        <th>配送方式</th>
+                        <th>特殊工艺</th>
+                        <th><input type="text" name="h1" id="hh1" v-model="offer.offerProcess1Name"></th>
+                        <th><input type="text" name="h2" id="hh2" v-model="offer.offerProcess2Name"></th>
+                        <th><input type="text" name="h3" id="hh3" v-model="offer.offerProcess3Name"></th>
+                        <th><input type="text" name="h4" id="hh4" v-model="offer.offerProcess4Name"></th>
+                        <th><input type="text" name="h5" id="hh5" v-model="offer.offerProcess5Name"></th>
+                    </tr>
+                    <tr>
+                        <td><select name="fumo" id="hfumo" v-model="offer.amounId">
+                            <option value=""></option>
+                            <option th:each="amoun:${mfAmouns}" th:text="${amoun.amounType}"
+                                    th:value="${amoun.amounId}"></option>
+                        </select></td>
+                        <td>
+                            <select name="zd" id="hzd" v-model="offer.bindingId">
+                                <option value=""></option>
+                                <option th:each="bingdings:${mfBingdings}" th:value="${bingdings.bindingId}"
+                                        th:text="${bingdings.bindingType}"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="sType" id="hsType">
+                                <option value=""></option>
+                                <option value="自取">自取</option>
+                                <option value="配送">配送</option>
+                            </select>
+                        </td>
+                        <th>
+                            金额
+                        </th>
+                        <td><input type="text" name="hv1" id="hhv1" v-model="offer.offerProcess1Price"></td>
+                        <td><input type="text" name="hv2" id="hhv2" v-model="offer.offerProcess2Price"></td>
+                        <td><input type="text" name="hv3" id="hhv3" v-model="offer.offerProcess3Price"></td>
+                        <td><input type="text" name="hv4" id="hhv4" v-model="offer.offerProcess4Price"></td>
+                        <td><input type="text" name="hv5" id="hhv5" v-model="offer.offerProcess5Price"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <th>配送金额</th>
+                        <td><input type="text" id="hpResult" v-model="offer.offerDeliveryPrice"></td>
+                        <td colspan="6"></td>
+                    </tr>
+                </table>
+                <div id="hresult">
+                    <div style="position: relative;">
+                        <button id="hsub" class="btn-danger float-right mr-5"
+                                style="width: 100px;height: 50px;font-size: 18px;" @click="toOffer()">立刻报价
+                        </button>
+                        <button class="btn btn-info float-right mr-5"
+                                id="offerAgain"
+                                style="width: 100px;height: 50px;font-size: 18px;display: none;" @click="offerAgain()">
+                            再报一次
+                        </button>
+                        <h2>金额:<span id="hnxResult">{{offer.offerCorePrice}}</span></h2>
+                        <h2>后期金额:<span id="hhjgResult">{{offer.offerMachiningPrice}}</span></h2>
+                        <h2>配送金额:<span id="hpsResult">{{offer.offerDeliveryPrice}}</span></h2>
+                        <h1>总金额:<span id="hresultMoney">{{offer.offerTotalPrice}}</span></h1>
+                    </div>
+                </div>
+            </div>
+            <script>
+                var offer = new Vue({
+                    el: "#offer_div",
+                    data() {
+                        return {
+                            offer: {
+                                typeId: 4,
+                                offerCustomerName: "",
+                                offerProductName: "",
+                                sizeId: "",
+                                offerNumber: "",
+                                offerCoreGrammage: "",
+                                paperIdCore: "",
+                                offerCoreP: "",
+                                colorIdCore: "",
+                                amounId: "",
+                                bindingId: "",
+                                offerDeliveryPrice: 6,
+                                offerProcess1Price: 0,
+                                offerProcess2Price: 0,
+                                offerProcess3Price: 0,
+                                offerProcess4Price: 0,
+                                offerProcess5Price: 0,
+                                offerProcess1Name: "",
+                                offerProcess2Name: "",
+                                offerProcess3Name: "",
+                                offerProcess4Name: "",
+                                offerProcess5Name: "",
+                                offerCorePrice: "",
+                                offerMachiningPrice: "",
+                                offerTotalPrice: ""
+                            }
+                        }
+                    },
+                    methods: {
+                        toOffer() {
+                            if (this.offer.sizeId == "" ||
+                                this.offer.offerNumber == "" ||
+                                this.offer.offerCoreGrammage == "" ||
+                                this.offer.offerCoreP == "" ||
+                                this.offer.colorIdCore == "" ||
+                                this.offer.paperIdCore == ""
+                            ) {
+                                alert("请填写完整信息");
+                            } else {
+                                $.ajax({
+                                    url: "/offer/price/picture",
+                                    type: "post",
+                                    contentType: "application/json",
+                                    data: JSON.stringify(this.offer),
+                                    dataType: "json",
+                                    success: function (msg) {
+                                        $("#hsub").hide();
+                                        $("#offerAgain").show();
+                                        //注入各种金额
+                                        offer.offer.offerCorePrice = msg.offerCorePrice;
+                                        offer.offer.offerTotalPrice = msg.offerTotalPrice;
+                                        offer.offer.offerMachiningPrice = msg.offerMachiningPrice;
+                                    },
+                                    error: function (msg) {
+                                        alert("调动失败");
+                                    }
+                                });
+                            }
+                        },
+                        offerAgain() {
+                            offer.offer.offerCoverPrive = "";
+                            offer.offer.offerCorePrice = "";
+                            offer.offer.offerInsetPrice = "";
+                            offer.offer.offerTotalPrice = "";
+                            offer.offer.offerMachiningPrice = "";
+                            $("#hsub").show();
+                            $("#offerAgain").hide();
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

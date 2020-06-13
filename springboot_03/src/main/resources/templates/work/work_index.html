@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>工单主页</title>
+    <link rel="stylesheet" href="/static/css/common/offer/offer_type_nav.css"
+          th:href="@{/static/css/common/offer/offer_type_nav.css}">
+    <link rel="stylesheet" href="/static/css/bootstrap.css" th:href="@{../../static/css/bootstrap.css}">
+    <link rel="stylesheet" href="/static/css/common/left_nav.css" th:href="@{../../static/css/common/left_nav.css}">
+    <script src="/static/js/jquery-1.12.4.js" th:src="@{../../static/js/jquery-1.12.4.js}"></script>
+    <script src="/static/js/bootstrap.js" th:src="@{../../static/js/bootstrap.js}"></script>
+    <script src="/static/js/vue.min.js" th:src="@{../../static/js/vue.min.js}"></script>
+    <script src="/static/js/bootstrap.bundle.js" th:src="@{../../static/js/bootstrap.bundle.js}"></script>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="/static/js/moment.js" th:src="@{/static/js/moment.js}"></script>
+    <script src="/static/js/excel/excel.js" th:src="@{../../static/js/excel/excel.js}"></script>
+    <script src="/static/js/excel/xlsx.full.min.js" th:src="@{../../static/js/excel/xlsx.full.min.js}"></script>
+</head>
+<script>
+
+</script>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 pl-0 pr-0" th:insert="~{common/left_nav :: left_nav}"></div>
+        <div class="col-md-11 mt-5" id="work_record">
+            <button class="btn btn-success float-right" id="generate-excel" @click="exportExcel">
+                导出当前页excel
+            </button>
+            <h1 align="center">工单主页</h1>
+            <div style="border: 1px solid">
+                <el-table
+                        :data="workRecords"
+                        border
+                        show-summary
+                        :summary-method="getSummaries"
+                        style="width: 100%;font-size: 19px;align-content: center;"
+                        height="725"
+                        id="work_table"
+                >
+                    <el-table-column
+                            type="index"
+                            :index="indexMethod"
+                            label="编号"
+                            width="122"
+                            align="center"
+                            sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="workTime"
+                            label="日期"
+                            :formatter="dateFormat"
+                            :filters="dateGroups"
+                            :filter-method="filterHandlerDate"
+                            width="122"
+                            sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="workCustomerName"
+                            label="客户名称"
+                            width="122"
+                            align="center"
+                            :filters="customerNames"
+                            :filter-method="filterHandler"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="workProductName"
+                            label="产品名称"
+                            width="122"
+                            align="center"
+                            :filters="productNames"
+                            :filter-method="filterHandler"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="workCoverGrammage"
+                            label="封面纸张"
+                            width="122"
+                    >
+                        <template slot-scope="scope" v-if="scope.row.workCoverGrammage!=null">
+                            {{scope.row.workCoverGrammage}}克{{scope.row.coverPaperType}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="workCoreGrammage,coverPaperId"
+                            label="内芯纸张"
+                            width="122"
+                    >
+                        <template slot-scope="scope">
+                            {{scope.row.workCoreGrammage}}克{{scope.row.corePaperType}}
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="workNumber"
+                            label="成品数量"
+                            width="122"
+                            align="center"
+                            sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="productSizeType"
+                            label="成品尺寸"
+                            width="122"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="coverColorType,coreColorType"
+                            label="印刷颜色"
+                            width="122"
+                    >
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.coverColorType==null">
+                                内芯-{{scope.row.coreColorType}}
+                            </span>
+                            <span v-else-if="scope.row.insetColorType==null">
+                                封面-{{scope.row.coverColorType}}
+                                <br>
+                                内芯-{{scope.row.coreColorType}}
+                            </span>
+                            <span v-else>
+                                 封面-{{scope.row.coverColorType}}
+                                <br>
+                                内芯-{{scope.row.coreColorType}}
+                                <br>
+                                插页-{{scope.row.insetColorType}}
+                            </span>
+                        </template>
+                    </el-table-column>
+                    <el-table-column
+                            prop="workPostProcessing"
+                            label="加工要求"
+                            width="122"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="workCoverPrice"
+                            label="封面价格"
+                            width="122"
+                            align="center"
+                            sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="workTotalPrice"
+                            label="总价"
+                            width="122"
+                            align="center"
+                            sortable
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            prop="workRemarks"
+                            label="备注"
+                            width="122"
+                    >
+                    </el-table-column>
+                    <el-table-column
+                            label="操作"
+                            width="122">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    @click="showOffer(scope.row)">查看工单明细
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <el-pagination
+                        background="true"
+                        layout="sizes,prev, pager, next,jumper"
+                        :total="totalPage" :page-size.sync="pageSize" :current-page="currentPage"
+                        @current-change="switchPage"
+                        :page-sizes="[10, 50, 100, 500]"
+                        @size-change="changeSize"
+                        style="margin-top:80px"
+                >
+                </el-pagination>
+            </div>
+            <script>
+                var workRecordVue = new Vue({
+                    el: "#work_record",
+                    data() {
+                        return {
+                            workRecords: [],
+                            totalPage: "",
+                            pageSize: "",
+                            currentPage: "",
+                            customerNames: [],
+                            productNames: [],
+                            dateGroups: []
+                        }
+                    },
+                    methods: {
+                        switchPage(page) {
+                            this.currentPage = page;
+                            this.getLimitWorkData();
+                        },
+                        changeSize(size) {
+                            this.pageSize = size;
+                            this.customerNames = [];
+                            this.productNames = [];
+                            this.dateGroups = [];
+                            this.getLimitWorkData();
+                        },
+                        indexMethod(index) {
+                            //产生编号
+                            return index + 1;
+                        },
+                        filterHandlerDate(value, row, column) {
+                            const property = column['property'];
+                            return moment(row[property]).format("yyyy-MM-DD") == value;
+                        },
+                        showOffer(data) {
+                            location.href = `/mfWork/print/produce/${data.workId}`;
+                        },
+                        createFilter(data, names, container) {
+                            //进行过滤生成对象
+                            var repeat = new Array();
+                            for (var key in data) {
+                                var tempCust = {
+                                    text: data[key][names],
+                                    value: data[key][names]
+                                };
+                                if (repeat.find(obj => obj === data[key][names]) === undefined) {
+                                    repeat.push(data[key][names]);
+                                    container.push(tempCust);
+                                }
+                            }
+                        },
+                        dateFormat(row, column) {
+                            //日期格式转换
+                            var date = row[column.property];
+                            if (date == undefined) {
+                                return '';
+                            }
+                            return moment(date).format("YYYY-MM-DD");
+                        },
+                        getLimitWorkData() {
+                            $.ajax({
+                                url: "/mfWork/all/list",
+                                type: "post",
+                                data: {"currentPage": this.currentPage, "pageSize": this.pageSize},
+                                dataType: "json",
+                                success(msg) {
+                                    workRecordVue.totalPage = msg.totalCount;
+                                    workRecordVue.currentPage = msg.currPage;
+                                    workRecordVue.pageSize = msg.pageSize;
+                                    workRecordVue.workRecords = msg.list;
+                                    console.log(msg);
+                                    //生成customerName
+                                    workRecordVue.createFilter(msg.list, "workCustomerName", workRecordVue.customerNames);
+                                    //生成produceName
+                                    workRecordVue.createFilter(msg.list, "workProductName", workRecordVue.productNames);
+                                    //生成dateGroups
+                                    var repeat = new Array();
+                                    for (let listKey in msg.list) {
+                                        var dateTemp = {
+                                            text: moment(msg.list[listKey].workTime).format("yyyy-MM-DD"),
+                                        };
+                                        if (repeat.find(obj => obj === moment(msg.list[listKey].workTime).format("yyyy-MM-DD")) === undefined) {
+                                            repeat.push(moment(msg.list[listKey].workTime).format("yyyy-MM-DD"));
+                                            workRecordVue.dateGroups.push(dateTemp);
+                                        }
+                                    }
+                                },
+                                error() {
+                                    alert("调用失败");
+                                }
+                            });
+                        },
+                        filterHandler(value, row, column) {
+                            const property = column['property'];
+                            return row[property] == value;
+                        },
+                        exportExcel() {
+                            var wb = XLSX.utils.table_to_book(document.querySelector('#work_table'))
+                            var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: true, type: 'array'})
+                            try {
+                                saveAs(new Blob([wbout], {type: 'application/octet-stream'}), 'work'+moment(new Date()).format("YYYY-MM-DD hh:mm:ss") + '.xlsx')
+                            } catch (e) {
+                                if (typeof console !== 'undefined') console.log(e, wbout)
+                            }
+                            return wbout
+                        },
+                        getSummaries(param) {
+                            const {columns, data} = param;
+                            const sums = [];
+                            columns.forEach((column, index) => {
+                                    if (index === 0) {
+                                        sums[index] = '合计';
+                                        return;
+                                    }
+                                    if (index === 1) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 6) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 4) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 9) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    if (index === 12) {
+                                        sums[index] = '';
+                                        return;
+                                    }
+                                    const values = data.map(item => Number(item[column.property]));
+                                    if (!values.every(value => isNaN(value))) {
+                                        sums[index] = values.reduce((prev, curr) => {
+                                            const value = Number(curr);
+                                            if (!isNaN(value)) {
+                                                return prev + curr;
+                                            } else {
+                                                return prev;
+                                            }
+                                        }, 0);
+                                        sums[index] += '元';
+                                    } else {
+                                        sums[index] = '';
+                                    }
+                                }
+                            );
+                            return sums;
+                        }
+                    },
+                    mounted() {
+                        this.getLimitWorkData();
+                    }
+                });
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>
