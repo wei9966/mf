@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mf_offer_system.springboot_02.dao.MfWorkDao">
+
+    <resultMap type="mf_offer_system.springboot_02.entity.MfWork" id="MfWorkMap">
+        <result property="workId" column="work_id" jdbcType="INTEGER"/>
+        <result property="workTime" column="work_time" jdbcType="TIMESTAMP"/>
+        <result property="workCustomerName" column="work_customer_name" jdbcType="VARCHAR"/>
+        <result property="workProductName" column="work_product_name" jdbcType="VARCHAR"/>
+        <result property="workNumber" column="work_number" jdbcType="INTEGER"/>
+        <result property="workDeliveryTime" column="work_delivery_time" jdbcType="TIMESTAMP"/>
+        <result property="workOfferTime" column="work_offer_time" jdbcType="TIMESTAMP"/>
+        <result property="machineId" column="machine_id" jdbcType="INTEGER"/>
+        <result property="productSizeId" column="product_size_id" jdbcType="INTEGER"/>
+        <result property="paneSizeId" column="pane_size_id" jdbcType="INTEGER"/>
+        <result property="corePaperId" column="core_paper_id" jdbcType="INTEGER"/>
+        <result property="coverPaperId" column="cover_paper_id" jdbcType="INTEGER"/>
+        <result property="insetPaperId" column="inset_paper_id" jdbcType="INTEGER"/>
+        <result property="workCoverLeave" column="work_cover_leave" jdbcType="INTEGER"/>
+        <result property="workCoreLeave" column="work_core_leave" jdbcType="INTEGER"/>
+        <result property="workInsetLeave" column="work_inset_leave" jdbcType="INTEGER"/>
+        <result property="workCoverPlayNumber" column="work_cover_play_number" jdbcType="INTEGER"/>
+        <result property="workCorePlayNumber" column="work_core_play_number" jdbcType="INTEGER"/>
+        <result property="workInsetPlayNumber" column="work_inset_play_number" jdbcType="INTEGER"/>
+        <result property="workCoverAlloysNumber" column="work_cover_alloys_number" jdbcType="INTEGER"/>
+        <result property="workCoreAlloysNumber" column="work_core_alloys_number" jdbcType="INTEGER"/>
+        <result property="workInsetAlloysNumber" column="work_inset_alloys_number" jdbcType="INTEGER"/>
+        <result property="coverColorId" column="cover_color_id" jdbcType="INTEGER"/>
+        <result property="insetColorId" column="inset_color_id" jdbcType="INTEGER"/>
+        <result property="coreColorId" column="core_color_id" jdbcType="INTEGER"/>
+        <result property="workCoverPlateNumber" column="work_cover_plate_number" jdbcType="INTEGER"/>
+        <result property="workCorePlateNumber" column="work_core_plate_number" jdbcType="INTEGER"/>
+        <result property="workInsetPlateNumber" column="work_inset_plate_number" jdbcType="INTEGER"/>
+        <result property="workPostProcessing" column="work_post_processing" jdbcType="VARCHAR"/>
+        <result property="workRemarks" column="work_remarks" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="MfWorkMap">
+        select
+          work_id, work_time, work_customer_name, work_product_name, work_number, work_delivery_time, work_offer_time, machine_id, product_size_id, pane_size_id, core_paper_id, cover_paper_id, inset_paper_id, work_cover_leave, work_core_leave, work_inset_leave, work_cover_play_number, work_core_play_number, work_inset_play_number, work_cover_alloys_number, work_core_alloys_number, work_inset_alloys_number, cover_color_id, inset_color_id, core_color_id, work_cover_plate_number, work_core_plate_number, work_inset_plate_number, work_post_processing, work_remarks
+        from mf_offer.mf_work
+        where work_id = #{workId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="MfWorkMap">
+        select
+          work_id, work_time, work_customer_name, work_product_name, work_number, work_delivery_time, work_offer_time, machine_id, product_size_id, pane_size_id, core_paper_id, cover_paper_id, inset_paper_id, work_cover_leave, work_core_leave, work_inset_leave, work_cover_play_number, work_core_play_number, work_inset_play_number, work_cover_alloys_number, work_core_alloys_number, work_inset_alloys_number, cover_color_id, inset_color_id, core_color_id, work_cover_plate_number, work_core_plate_number, work_inset_plate_number, work_post_processing, work_remarks
+        from mf_offer.mf_work
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="MfWorkMap">
+        select
+          work_id, work_time, work_customer_name, work_product_name, work_number, work_delivery_time, work_offer_time, machine_id, product_size_id, pane_size_id, core_paper_id, cover_paper_id, inset_paper_id, work_cover_leave, work_core_leave, work_inset_leave, work_cover_play_number, work_core_play_number, work_inset_play_number, work_cover_alloys_number, work_core_alloys_number, work_inset_alloys_number, cover_color_id, inset_color_id, core_color_id, work_cover_plate_number, work_core_plate_number, work_inset_plate_number, work_post_processing, work_remarks
+        from mf_offer.mf_work
+        <where>
+            <if test="workId != null">
+                and work_id = #{workId}
+            </if>
+            <if test="workTime != null">
+                and work_time = #{workTime}
+            </if>
+            <if test="workCustomerName != null and workCustomerName != ''">
+                and work_customer_name = #{workCustomerName}
+            </if>
+            <if test="workProductName != null and workProductName != ''">
+                and work_product_name = #{workProductName}
+            </if>
+            <if test="workNumber != null">
+                and work_number = #{workNumber}
+            </if>
+            <if test="workDeliveryTime != null">
+                and work_delivery_time = #{workDeliveryTime}
+            </if>
+            <if test="workOfferTime != null">
+                and work_offer_time = #{workOfferTime}
+            </if>
+            <if test="machineId != null">
+                and machine_id = #{machineId}
+            </if>
+            <if test="productSizeId != null">
+                and product_size_id = #{productSizeId}
+            </if>
+            <if test="paneSizeId != null">
+                and pane_size_id = #{paneSizeId}
+            </if>
+            <if test="corePaperId != null">
+                and core_paper_id = #{corePaperId}
+            </if>
+            <if test="coverPaperId != null">
+                and cover_paper_id = #{coverPaperId}
+            </if>
+            <if test="insetPaperId != null">
+                and inset_paper_id = #{insetPaperId}
+            </if>
+            <if test="workCoverLeave != null">
+                and work_cover_leave = #{workCoverLeave}
+            </if>
+            <if test="workCoreLeave != null">
+                and work_core_leave = #{workCoreLeave}
+            </if>
+            <if test="workInsetLeave != null">
+                and work_inset_leave = #{workInsetLeave}
+            </if>
+            <if test="workCoverPlayNumber != null">
+                and work_cover_play_number = #{workCoverPlayNumber}
+            </if>
+            <if test="workCorePlayNumber != null">
+                and work_core_play_number = #{workCorePlayNumber}
+            </if>
+            <if test="workInsetPlayNumber != null">
+                and work_inset_play_number = #{workInsetPlayNumber}
+            </if>
+            <if test="workCoverAlloysNumber != null">
+                and work_cover_alloys_number = #{workCoverAlloysNumber}
+            </if>
+            <if test="workCoreAlloysNumber != null">
+                and work_core_alloys_number = #{workCoreAlloysNumber}
+            </if>
+            <if test="workInsetAlloysNumber != null">
+                and work_inset_alloys_number = #{workInsetAlloysNumber}
+            </if>
+            <if test="coverColorId != null">
+                and cover_color_id = #{coverColorId}
+            </if>
+            <if test="insetColorId != null">
+                and inset_color_id = #{insetColorId}
+            </if>
+            <if test="coreColorId != null">
+                and core_color_id = #{coreColorId}
+            </if>
+            <if test="workCoverPlateNumber != null">
+                and work_cover_plate_number = #{workCoverPlateNumber}
+            </if>
+            <if test="workCorePlateNumber != null">
+                and work_core_plate_number = #{workCorePlateNumber}
+            </if>
+            <if test="workInsetPlateNumber != null">
+                and work_inset_plate_number = #{workInsetPlateNumber}
+            </if>
+            <if test="workPostProcessing != null and workPostProcessing != ''">
+                and work_post_processing = #{workPostProcessing}
+            </if>
+            <if test="workRemarks != null and workRemarks != ''">
+                and work_remarks = #{workRemarks}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="workId" useGeneratedKeys="true">
+        insert into mf_offer.mf_work(work_time, work_customer_name, work_product_name, work_number, work_delivery_time, work_offer_time, machine_id, product_size_id, pane_size_id, core_paper_id, cover_paper_id, inset_paper_id, work_cover_leave, work_core_leave, work_inset_leave, work_cover_play_number, work_core_play_number, work_inset_play_number, work_cover_alloys_number, work_core_alloys_number, work_inset_alloys_number, cover_color_id, inset_color_id, core_color_id, work_cover_plate_number, work_core_plate_number, work_inset_plate_number, work_post_processing, work_remarks)
+        values (#{workTime}, #{workCustomerName}, #{workProductName}, #{workNumber}, #{workDeliveryTime}, #{workOfferTime}, #{machineId}, #{productSizeId}, #{paneSizeId}, #{corePaperId}, #{coverPaperId}, #{insetPaperId}, #{workCoverLeave}, #{workCoreLeave}, #{workInsetLeave}, #{workCoverPlayNumber}, #{workCorePlayNumber}, #{workInsetPlayNumber}, #{workCoverAlloysNumber}, #{workCoreAlloysNumber}, #{workInsetAlloysNumber}, #{coverColorId}, #{insetColorId}, #{coreColorId}, #{workCoverPlateNumber}, #{workCorePlateNumber}, #{workInsetPlateNumber}, #{workPostProcessing}, #{workRemarks})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mf_offer.mf_work
+        <set>
+            <if test="workTime != null">
+                work_time = #{workTime},
+            </if>
+            <if test="workCustomerName != null and workCustomerName != ''">
+                work_customer_name = #{workCustomerName},
+            </if>
+            <if test="workProductName != null and workProductName != ''">
+                work_product_name = #{workProductName},
+            </if>
+            <if test="workNumber != null">
+                work_number = #{workNumber},
+            </if>
+            <if test="workDeliveryTime != null">
+                work_delivery_time = #{workDeliveryTime},
+            </if>
+            <if test="workOfferTime != null">
+                work_offer_time = #{workOfferTime},
+            </if>
+            <if test="machineId != null">
+                machine_id = #{machineId},
+            </if>
+            <if test="productSizeId != null">
+                product_size_id = #{productSizeId},
+            </if>
+            <if test="paneSizeId != null">
+                pane_size_id = #{paneSizeId},
+            </if>
+            <if test="corePaperId != null">
+                core_paper_id = #{corePaperId},
+            </if>
+            <if test="coverPaperId != null">
+                cover_paper_id = #{coverPaperId},
+            </if>
+            <if test="insetPaperId != null">
+                inset_paper_id = #{insetPaperId},
+            </if>
+            <if test="workCoverLeave != null">
+                work_cover_leave = #{workCoverLeave},
+            </if>
+            <if test="workCoreLeave != null">
+                work_core_leave = #{workCoreLeave},
+            </if>
+            <if test="workInsetLeave != null">
+                work_inset_leave = #{workInsetLeave},
+            </if>
+            <if test="workCoverPlayNumber != null">
+                work_cover_play_number = #{workCoverPlayNumber},
+            </if>
+            <if test="workCorePlayNumber != null">
+                work_core_play_number = #{workCorePlayNumber},
+            </if>
+            <if test="workInsetPlayNumber != null">
+                work_inset_play_number = #{workInsetPlayNumber},
+            </if>
+            <if test="workCoverAlloysNumber != null">
+                work_cover_alloys_number = #{workCoverAlloysNumber},
+            </if>
+            <if test="workCoreAlloysNumber != null">
+                work_core_alloys_number = #{workCoreAlloysNumber},
+            </if>
+            <if test="workInsetAlloysNumber != null">
+                work_inset_alloys_number = #{workInsetAlloysNumber},
+            </if>
+            <if test="coverColorId != null">
+                cover_color_id = #{coverColorId},
+            </if>
+            <if test="insetColorId != null">
+                inset_color_id = #{insetColorId},
+            </if>
+            <if test="coreColorId != null">
+                core_color_id = #{coreColorId},
+            </if>
+            <if test="workCoverPlateNumber != null">
+                work_cover_plate_number = #{workCoverPlateNumber},
+            </if>
+            <if test="workCorePlateNumber != null">
+                work_core_plate_number = #{workCorePlateNumber},
+            </if>
+            <if test="workInsetPlateNumber != null">
+                work_inset_plate_number = #{workInsetPlateNumber},
+            </if>
+            <if test="workPostProcessing != null and workPostProcessing != ''">
+                work_post_processing = #{workPostProcessing},
+            </if>
+            <if test="workRemarks != null and workRemarks != ''">
+                work_remarks = #{workRemarks},
+            </if>
+        </set>
+        where work_id = #{workId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mf_offer.mf_work where work_id = #{workId}
+    </delete>
+
+</mapper>

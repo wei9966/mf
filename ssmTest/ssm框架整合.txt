@@ -1,0 +1,135 @@
+1.编写好所需要的类  如controller(控制类) dao(持久层) domain/pojo(实体类) service(服务层)
+2.搭建spring的入门环境  spring对应的是服务层
+        2.1 创建dao层方法
+        2.2 创建service层方法
+        2.3 创建service实现类
+        2.4编写applicationContext.xml
+            <?xml version="1.0" encoding="UTF-8"?>
+            <beans xmlns="http://www.springframework.org/schema/beans"
+                   xmlns:context="http://www.springframework.org/schema/context"
+                   xmlns:tx="http://www.springframework.org/schema/tx"
+                   xmlns:aop="http://www.springframework.org/schema/aop"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="
+                   http://www.springframework.org/schema/beans
+                   http://www.springframework.org/schema/beans/spring-beans.xsd
+                   http://www.springframework.org/schema/context
+                   http://www.springframework.org/schema/context/spring-context.xsd
+                   http://www.springframework.org/schema/aop
+                   http://www.springframework.org/schema/aop/spring-aop.xsd
+                   http://www.springframework.org/schema/tx
+                   http://www.springframework.org/schema/tx/spring-tx.xsd">
+                //开启扫描
+                <context:component-scan base-package="com.wb">
+                        <!--配置哪些注解不扫描-->
+                        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:exclude-filter>
+                    </context:component-scan>
+             </beans>
+             2.5 在服务层编写注解@Service()
+             2.6 在测试类中测试能否调用spring的service 到此spring框架搭建成功
+3.搭建springMVC环境
+            3.1 在web.xml中配置好 前端控制器 和让tomcat服务器启动的时候就加载
+                控制器名称 dispatcherServlet
+                初始加载  init-param name=contextConfigLocation value=springMVC配置文件的路径
+                启动时自动加载<load-on-startup>
+                配置好监听器
+                    <listener>
+                        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+                      </listener>
+                <!--设置配置文件的路径-->
+                  <context-param>
+                    <param-name>contextConfigLocation</param-name>
+                    <param-value>classpath:applicationContext.xml</param-value>
+                  </context-param>
+                 <!--过滤器  解决中文乱码-->
+                   <filter>
+                     <filter-name>characterEncodingFilter</filter-name>
+                     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+                     <init-param>
+                       <param-name>encoding</param-name>
+                       <param-value>UTF-8</param-value>
+                     </init-param>
+                   </filter>
+                   <filter-mapping>
+                     <filter-name>characterEncodingFilter</filter-name>
+                     <url-pattern>/*</url-pattern>
+                   </filter-mapping>
+
+            3.2 编写springMVC配置文件
+                <beans xmlns="http://www.springframework.org/schema/beans"
+                       xmlns:mvc="http://www.springframework.org/schema/mvc"
+                       xmlns:context="http://www.springframework.org/schema/context"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="
+                       http://www.springframework.org/schema/beans
+                       http://www.springframework.org/schema/beans/spring-beans.xsd
+                       http://www.springframework.org/schema/mvc
+                       http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                       http://www.springframework.org/schema/context
+                       http://www.springframework.org/schema/context/spring-context.xsd">
+                  <!--开启注解扫描-->
+                      <context:component-scan base-package="com.wb">
+                          <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:include-filter>
+                      </context:component-scan>
+                      <!--配置视图解析器-->
+                      <bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                      <property name="prefix" value="/WEB-INF/pages/"></property>
+                      <property name="suffix" value=".jsp"></property>
+                      </bean>
+                      <!--过滤静态资源-->
+                      <mvc:resources mapping="/css/**" location="/css/"></mvc:resources>
+                      <mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
+                      <mvc:resources mapping="/js/**" location="/js/"></mvc:resources>
+                      <!--开启springMVC注解的支持-->
+                      <mvc:annotation-driven></mvc:annotation-driven>
+                        3.2.1 开启controller注解扫描 使用context:component-scan 过滤 context:include Controller
+                        3.2.2 配置视图解析器
+                            InternalResourceViewResolver
+                            两个属性
+                            prefix 路径
+                            suffix 后缀名
+                        3.2.3 过滤静态资源
+                            用mvc:resources 的location表示位置 mapper 代表的是映射位置
+                        3.2.4 开启springMVC注解的支持
+                </bean>
+            3.3 在controller类上加注解
+                @controller及@RequestMapping
+            3.4 spring整合springMVC就是编写监听器 以及 读取配置文件
+            3.4 创建jsp页面测试 测试 成功代表整合成功
+4.搭建mybatis框架
+            <!--配置连接池-->
+                <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+                    <property name="driverClass" value="com.mysql.jdbc.Driver"></property>
+                    <property name="jdbcUrl" value="jdbc:mysql://localhost:3306/ssm"></property>
+                    <property name="user" value="root"></property>
+                    <property name="password" value="996649855"></property>
+                </bean>
+                <!--配置SqlSessionFactory工厂-->
+                <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+                    <property name="dataSource" ref="dataSource"/>
+                </bean>
+
+                <!--配置AccountDao接口所在包-->
+                <bean id="mapperScan" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+                    <property name="basePackage" value="com.wb.dao"/>
+                </bean>
+5.事务管理配置
+            <!--配置spring框架声明事务管理-->
+                <!--配置事务管理器-->
+                <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+                    <property name="dataSource" ref="dataSource"></property>
+                </bean>
+
+                <!--配置事务通知-->
+                <tx:advice id="txAdvice" transaction-manager="transactionManager">
+                    <!--name只读-->
+                    <tx:attributes>
+                        <tx:method name="find*" read-only="true"/>
+                        <tx:method name="*" isolation="DEFAULT"/>
+                    </tx:attributes>
+                </tx:advice>
+                <!--配置AOP增强-->
+                <aop:config>
+                    <!--引用事务通知  pointcut 切入点表达式-->
+                    <aop:advisor advice-ref="txAdvice" pointcut="execution(* com.wb.service.impl.*ServiceImpl.*())"/>
+                </aop:config>
