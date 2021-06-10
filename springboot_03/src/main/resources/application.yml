@@ -1,5 +1,5 @@
 server:
-  port: 18888
+  port: 18880
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -13,7 +13,7 @@ spring:
     template-resolver-order: 1
 mybatis:
   type-aliases-package: mf_offer_system.springboot_02.entity
-  mapper-locations: classpath:/mapper/**
+  mapper-locations: classpath:mapper/*.xml
 logging:
   level:
     mf_offer_system:

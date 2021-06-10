@@ -90,7 +90,7 @@ public interface MfWorkHbDao {
 
     int queryAllWorkCountsGroupByName();
 
-    List<MfWork> queryByPageByName(int offest, int pageSize, String customerName);
+    List<MfWork> queryByPageByName(@Param("offest")int offest, @Param("limit")int pageSize, @Param("customerName")String customerName);
 
-    int queryAllWorkCountsByName(String customerName);
+    int queryAllWorkCountsByName(@Param("customerName")String customerName);
 }

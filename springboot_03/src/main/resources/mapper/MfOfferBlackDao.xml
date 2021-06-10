@@ -417,7 +417,7 @@
         where offer_id=#{offerId};
     </select>
     <delete id="deleteByIds" parameterType="collection">
-        delete from mf_offer where offer_id in
+        delete from mf_offer_black where offer_id in
         <foreach item="item" index="index" collection="array"
                  open="(" separator="," close=")">
             #{item}

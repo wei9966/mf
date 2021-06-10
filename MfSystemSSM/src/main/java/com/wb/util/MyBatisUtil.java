@@ -33,7 +33,6 @@ public class MyBatisUtil {
             SqlSession session = factory.openSession();
             tl.set(session);
         }
-
         return tl.get();
     }
     /**

@@ -5,6 +5,7 @@ import mf_offer_system.springboot_02.service.MfPaperService;
 import mf_offer_system.springboot_02.service.MfTonpriceService;
 import mf_offer_system.springboot_02.service.OfferService;
 import mf_offer_system.springboot_02.util.CountUtil;
+import mf_offer_system.springboot_02.util.GetYinBanNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -110,7 +111,7 @@ public class OfferServiceImpl implements OfferService {
         double corePaperPriceCore = corePaperNum * v1;
         System.out.println("内芯纸数量" + corePaperNum);
         //获取印工价格
-        double corePrintPriceCore = (mfOffer.getOfferCoreP() % 4 == 0 ? mfOffer.getOfferCoreP() / 4 : mfOffer.getOfferCoreP() / 4 + 1) * 160;
+        double corePrintPriceCore = (mfOffer.getOfferCoreP() % 4 == 0 ? mfOffer.getOfferCoreP() / 4 : mfOffer.getOfferCoreP() / 4 + 1) * GetYinBanNumber.getYinBanNumber(mfOffer.getOfferNumber());
         mfOffer.setOfferCorePrice((float) (corePaperPriceCore + corePrintPriceCore));
         System.out.println("内芯印工价格" + corePrintPriceCore + "\t内芯总价" + mfOffer.getOfferCorePrice() + "\t内芯纸价" + corePaperPriceCore);
         //然后计算后加工的钱(复膜和装订)
@@ -168,7 +169,7 @@ public class OfferServiceImpl implements OfferService {
             double coverPaperNum = CountUtil.getPaperNumber(coverP, kaiBie, number,1);
             System.out.println("封面指数量" + coverPaperNum);
             double coverPaperPriceCover = coverPaperNum * v;
-            double coverPrinterPriceCover = (mfOffer.getOfferCoverP() % 4 == 0 ? mfOffer.getOfferCoverP() / 4 : mfOffer.getOfferCoverP() / 4 + 1) * 160;
+            double coverPrinterPriceCover = (mfOffer.getOfferCoverP() % 4 == 0 ? mfOffer.getOfferCoverP() / 4 : mfOffer.getOfferCoverP() / 4 + 1) * GetYinBanNumber.getYinBanNumber(mfOffer.getOfferNumber());
             mfOffer.setOfferCoverPrive((float) (coverPaperPriceCover + coverPrinterPriceCover));
             System.out.println("封面印工" + coverPrinterPriceCover + "封面总价" + mfOffer.getOfferCoverPrive() + "\t封面纸价" + coverPaperPriceCover);
         } else if (mfOffer.getColorIdCover() == 2) {
@@ -189,7 +190,7 @@ public class OfferServiceImpl implements OfferService {
             mfOffer.setOfferCoverPrive((float) (coverPaperPriceCover + printerPrice + allMoldCost));
         }
 
-        if (mfOffer.getColorIdInset() == 1 &&mfOffer.getOfferInsetGrammage() != null) {
+        if (mfOffer.getOfferInsetGrammage() != null) {
             double insetv1 = mfTonpriceService.countSinglePaper(mfOffer, 2);
             System.out.println("插页纸张单价" + insetv1);
             double insetP = mfOffer.getOfferInsetP();
@@ -198,7 +199,7 @@ public class OfferServiceImpl implements OfferService {
             double insetPaperPriceCore = insetPaperNum * insetv1;
             System.out.println("插页纸数量" + insetPaperNum);
             //获取印工价格
-            double insetPrintPriceCore = (mfOffer.getOfferInsetP() % 4 == 0 ? mfOffer.getOfferInsetP() / 4 : mfOffer.getOfferInsetP() / 4 + 1) * 160;
+            double insetPrintPriceCore = (mfOffer.getOfferInsetP() % 4 == 0 ? mfOffer.getOfferInsetP() / 4 : mfOffer.getOfferInsetP() / 4 + 1) * GetYinBanNumber.getYinBanNumber(mfOffer.getOfferNumber());
             mfOffer.setOfferInsetPrice((float) (insetPaperPriceCore + insetPrintPriceCore));
             System.out.println("插页印工价格" + insetPrintPriceCore + "\t插页总价" + mfOffer.getOfferInsetPrice() + "\t插页纸价" + insetPaperPriceCore);
         } else if (mfOffer.getColorIdCore() == 2) {
@@ -264,7 +265,7 @@ public class OfferServiceImpl implements OfferService {
         double coverPaperNum = CountUtil.getPaperNumber(coverP, kaiBie, number,1);
         System.out.println("封面指数量" + coverPaperNum);
         double coverPaperPriceCover = coverPaperNum * v;
-        double coverPrinterPriceCover = (mfOffer.getOfferCoverP() % 4 == 0 ? mfOffer.getOfferCoverP() / 4 : mfOffer.getOfferCoverP() / 4 + 1) * 160;
+        double coverPrinterPriceCover = (mfOffer.getOfferCoverP() % 4 == 0 ? mfOffer.getOfferCoverP() / 4 : mfOffer.getOfferCoverP() / 4 + 1) * GetYinBanNumber.getYinBanNumber(mfOffer.getOfferNumber()) ;
         mfOffer.setOfferCoverPrive((float) (coverPaperPriceCover + coverPrinterPriceCover));
         System.out.println("封面印工" + coverPrinterPriceCover + "封面总价" + mfOffer.getOfferCoverPrive() + "\t封面纸价" + coverPaperPriceCover);
         //然后计算内芯
@@ -278,7 +279,7 @@ public class OfferServiceImpl implements OfferService {
         double corePaperPriceCore = corePaperNum * v1;
         System.out.println("内芯纸数量" + corePaperNum);
         //获取印工价格
-        double corePrintPriceCore = (mfOffer.getOfferCoreP() % 4 == 0 ? mfOffer.getOfferCoreP() / 4 : mfOffer.getOfferCoreP() / 4 + 1) * 160;
+        double corePrintPriceCore = (mfOffer.getOfferCoreP() % 4 == 0 ? mfOffer.getOfferCoreP() / 4 : mfOffer.getOfferCoreP() / 4 + 1) * GetYinBanNumber.getYinBanNumber(mfOffer.getOfferNumber());
         mfOffer.setOfferCorePrice((float) (corePaperPriceCore + corePrintPriceCore));
         System.out.println("内芯印工价格" + corePrintPriceCore + "\t内芯总价" + mfOffer.getOfferCorePrice() + "\t内芯纸价" + corePaperPriceCore);
         //然后判断是否有插页计算插页

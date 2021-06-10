@@ -373,7 +373,7 @@
        limit #{offest},#{limit};
     </select>
 
-    <select id="queryAllWorkCountsGroupByName" resultType="integer">
+    <select id="queryAllWorkCountsGroupByName" resultType="java.lang.Integer">
       select count(distinct work_customer_name) from mf_work_hb;
     </select>
 
@@ -395,7 +395,7 @@
         order by work_time desc
         limit #{offest},#{limit};
     </select>
-    <select id="queryAllWorkCountsByName" resultType="integer">
+    <select id="queryAllWorkCountsByName" resultType="java.lang.Integer">
       select count(*) from mf_work_hb where work_customer_name=#{customerName}
     </select>
 </mapper>

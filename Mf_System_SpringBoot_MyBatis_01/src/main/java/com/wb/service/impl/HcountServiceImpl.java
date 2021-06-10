@@ -134,11 +134,12 @@ public class HcountServiceImpl implements HcountService {
 
         if (b.getHzd().equals("胶装")){
             if (b.getHnxPs()<200){
-                zd=(b.getHnxPs()/8*0.03+0.25)*b.getHcount();
-            }else {
                 zd=(b.getHnxPs()/8*0.03+0.35)*b.getHcount();
+            }else {
+                zd=(b.getHnxPs()/8*0.03+0.25)*b.getHcount();
             }
         }else if(b.getHzd().equals("骑马钉")){
+            //不到100元按照100算
             zd=(b.getHnxPs()/8*0.03+0.05)*b.getHcount();
         }else {
             zd=0;

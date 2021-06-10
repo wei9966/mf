@@ -1,8 +1,15 @@
 package mf_offer_system.springboot_02.config;
 
+import mf_offer_system.springboot_02.service.impl.MfUserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.sql.DataSource;
 
 /**
  * Create By WeiBin on 2020/5/10 22:51
@@ -11,6 +18,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    MfUserServiceImpl mfUser;
+    @Autowired
+    private DataSource dataSource;
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource);
+//        tokenRepository.setCreateTableOnStartup(true);
+        return tokenRepository;
+    }
+
     /**
      * 进行登录之后的判断用的
      *
@@ -21,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 // 放行登录
-                .antMatchers("/login/**","/static/**").permitAll()
+                .antMatchers("/login/**", "/static/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 // 开启表单认证
@@ -33,6 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 // 第二个参数，如果不写成true，则默认登录成功以后，访问之前被拦截的页面，而非去我们规定的页面
                 .defaultSuccessUrl("/user/person", true).successHandler(new MyLoginSuccessHandle())
+                .and()
+                .rememberMe().tokenRepository(persistentTokenRepository())
+                .tokenValiditySeconds(3600)
+                .userDetailsService(mfUser)
                 .and()
                 .logout()
                 .logoutUrl("/logout")

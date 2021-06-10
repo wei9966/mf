@@ -5,6 +5,7 @@ import mf_offer_system.springboot_02.entity.MfOffer;
 import mf_offer_system.springboot_02.service.MfOfferBlackService;
 import mf_offer_system.springboot_02.util.PageUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  * @since 2020-05-11 22:27:52
  */
 @Service("mfOfferBlackService")
+@Transactional(rollbackForClassName = "Exception")
 public class MfOfferBlackServiceImpl implements MfOfferBlackService {
     @Resource
     private MfOfferBlackDao mfOfferBlackDao;
@@ -28,6 +30,7 @@ public class MfOfferBlackServiceImpl implements MfOfferBlackService {
      */
     @Override
     public MfOffer queryById(Long offerId) {
+
         return this.mfOfferBlackDao.queryById(offerId);
     }
 
